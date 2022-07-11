@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Laba1
@@ -21,6 +21,9 @@ namespace Laba1
         private Task6 _Task6 { get; set; }
         private Task21 _Task21 { get; set; }
         private Task24 _Task24 { get; set; }
+        private Task33 _Task33 { get; set; }
+        private TreeTask4 _TreeTask4 { get; set; }
+        private SortTask5 _SortTask5 { get; set; }
 
         public MainForm()
         {
@@ -31,9 +34,18 @@ namespace Laba1
             _Task6 = new Task6();
             _Task21 = new Task21();
             _Task24 = new Task24();
+            _Task33 = new Task33();
+            _TreeTask4 = new TreeTask4();
+            _SortTask5 = new SortTask5((int)nudTask5SortCountOfElements.Value);
 
             cbTask21AddVariant.SelectedIndex = 0;
             cbTask24AddVariant.SelectedIndex = 0;
+            cbTask33AddElementVariants.SelectedIndex = 0;
+            cbTask33DeleteVariants.SelectedIndex = 0;
+            cbSortTask5SortVariant.SelectedIndex = 0;
+
+            TreeTask4UpdateUI();
+            Task5SortUpdateUI();
         }
 
         #region Task 1
@@ -236,6 +248,106 @@ namespace Laba1
         private void Task24UpdateUI()
         {
             lbTask24.Text = $"Список:{NL}{_Task24.PrintElements()}";
+        }
+
+        #endregion
+
+        #region Task 3 - 3
+
+        private void btnTask33FindElement_Click(object sender, EventArgs e)
+        {
+            int index = _Task33.FindElement((int)nudTask33FindElement.Value);
+            if (index != -1)
+                ShowMessage($"Элемент находится в листе с индексом {index}.");
+            else
+                ShowMessage("Элемент не найден.");
+        }
+
+        private void btnTask33AddElement_Click(object sender, EventArgs e)
+        {
+            // добавить в существующий; иначе в новый лист
+            if(cbTask33AddElementVariants.SelectedIndex == 0)
+            {
+                if (!_Task33.AddElement((int)nudTask33Element.Value, false, (int)nudTask33ListIndex.Value))
+                    ShowMessage("Не найден список с заданным индексом.");
+            }
+            else
+                _Task33.AddElement((int)nudTask33Element.Value, true, 0);
+            
+            Task33UpdateUI();
+        }
+
+        private void btnTask33DeleteElement_Click(object sender, EventArgs e)
+        {
+            // удалить элемент; иначе удалить список
+            if(cbTask33DeleteVariants.SelectedIndex == 0)
+            {
+                if (!_Task33.DeleteElement((int)nudTask33Element.Value, (int)nudTask33ListIndex.Value))
+                    ShowMessage("Не найден список с заданным индексом или не найден заданный элемент.");
+            }
+            else
+            {
+                if (!_Task33.DeleteList((int)nudTask33ListIndex.Value))
+                    ShowMessage("Не найден список с заданным индексом.");
+            }
+
+            Task33UpdateUI();
+        }
+
+        private void Task33UpdateUI()
+        {
+            lbTask33.Text = $"Список списков:{NL}{_Task33.PrintElements()}";
+        }
+
+        #endregion
+
+        #region Task 4 - 1
+
+        private void btnTreeTask4AddElement_Click(object sender, EventArgs e)
+        {
+            _TreeTask4.AddElement();
+            TreeTask4UpdateUI();
+        }
+
+        private void btnTreeTask4DeleteElement_Click(object sender, EventArgs e)
+        {
+            if(!_TreeTask4.DeleteElement((int)nudTreeTask4Element.Value))
+                ShowMessage("Не найден заданный элемент.");
+            TreeTask4UpdateUI();
+        }
+
+        private void TreeTask4UpdateUI()
+        {
+            tbTreeTask4.Text = $"Дерево:{NL}{_TreeTask4.PrintElements()}";
+        }
+
+        #endregion
+
+        #region Task 5
+
+        private void btnSortTask5CreateNewArray_Click(object sender, EventArgs e)
+        {
+            _SortTask5 = new SortTask5((int)nudTask5SortCountOfElements.Value);
+            Task5SortUpdateUI();
+        }
+
+        private void btnSortTask5Sort_Click(object sender, EventArgs e)
+        {
+            string msg = "";
+            switch (cbSortTask5SortVariant.SelectedIndex)
+            {
+                case 0: msg = _SortTask5.SortBubble(); break;
+                case 1: msg = _SortTask5.SortSelect(); break;
+                case 2: msg = _SortTask5.SortPut(); break;
+                case 3: msg = _SortTask5.SortShell(); break;
+            }
+            Task5SortUpdateUI();
+            ShowMessage(msg);
+        }
+
+        private void Task5SortUpdateUI()
+        {
+            tbSortTask5.Text = $"Исходный массив: {_SortTask5.PrintMainElements()}{NL}Отсортированный массив: {_SortTask5.PrintSortedElements()}";
         }
 
         #endregion
@@ -753,24 +865,457 @@ namespace Laba1
             for (int i = 0; i < mainItems.Count; i++)
                 for (int j = 0; j < mainItems[i].Count; j++)
                     if (mainItems[i][j] == element)
-                        return mainItems[i][j];
+                        return i;
             return -1;
         }
 
         /// <summary>
-        /// Добавляет элемент в новый список либо в список с заданным <paramref name="index"/>
+        /// Добавляет элемент в новый список либо в список с заданным <paramref name="listIndex"/>
         /// </summary>
         /// <param name="element">Добавляемый элемент</param>
         /// <param name="isNew">Создаём новый список или используем существующий</param>
-        /// <param name="index">Индекс списка, в который будем добавлять элемент</param>
-        public void AddElement(int element, bool isNew, int index)
+        /// <param name="listIndex">Индекс списка, в который будем добавлять элемент</param>
+        public bool AddElement(int element, bool isNew, int listIndex)
         {
             if (!isNew)
             {
+                if (listIndex >= mainItems.Count)
+                    return false;
 
-                return;
+                mainItems[listIndex].Add(element);
+
+                return true;
             }
             mainItems.Add(new List<int>() { element });
+            return true;
+        }
+
+        public bool DeleteElement(int element, int listIndex)
+        {
+            if (listIndex >= mainItems.Count)
+                return false;
+
+            if (!mainItems[listIndex].Any(x => x == element))
+                return false;
+
+            mainItems[listIndex].Remove(element);
+
+            return true;
+        }
+
+        public bool DeleteList(int listIndex)
+        {
+            if (listIndex >= mainItems.Count)
+                return false;
+
+            mainItems.RemoveAt(listIndex);
+
+            return true;
+        }
+
+        public string PrintElements()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < mainItems.Count; i++)
+            {
+                sb.Append($"{i}. ");
+                sb.Append(string.Join(",", mainItems[i]));
+                sb.Append(Environment.NewLine);
+            }
+            return sb.ToString();
+        }
+
+    }
+
+    public class TreeTask4
+    {
+
+        private Random _Random;
+
+        private List<int> CachedElements;
+
+        private BinaryTree<int> _BinaryTree;
+
+        public TreeTask4()
+        {
+            _Random = new Random();
+            CachedElements = new List<int>();
+            _BinaryTree = new BinaryTree<int>(GetRandomElement(), null);
+        }
+
+        public void AddElement()
+        {
+            _BinaryTree.add(GetRandomElement());
+        }
+
+        public bool DeleteElement(int value)
+        {
+            return _BinaryTree.remove(value);
+        }
+
+        public string PrintElements()
+        {
+            return _BinaryTree.print();
+        }
+
+        private int GetRandomElement()
+        {
+            int result;
+            do
+            {
+                result = _Random.Next(1000, 9999);
+            } while (CachedElements.Contains(result));
+            CachedElements.Add(result);
+            return result;
+        }
+
+        public class BinaryTree<T> where T : IComparable<T>
+        {
+            private BinaryTree<T> parent, left, right;
+            private T val;
+
+            public BinaryTree(T val, BinaryTree<T> parent)
+            {
+                this.val = val;
+                this.parent = parent;
+            }
+
+            public void add(T val)
+            {
+                if (val.CompareTo(this.val) < 0)
+                {
+                    if (this.left == null)
+                    {
+                        this.left = new BinaryTree<T>(val, this);
+                    }
+                    else if (this.left != null)
+                        this.left.add(val);
+                }
+                else
+                {
+                    if (this.right == null)
+                    {
+                        this.right = new BinaryTree<T>(val, this);
+                    }
+                    else if (this.right != null)
+                        this.right.add(val);
+                }
+            }
+
+            private BinaryTree<T> _search(BinaryTree<T> tree, T val)
+            {
+                if (tree == null) return null;
+                switch (val.CompareTo(tree.val))
+                {
+                    case 1: return _search(tree.right, val);
+                    case -1: return _search(tree.left, val);
+                    case 0: return tree;
+                    default: return null;
+                }
+            }
+
+            public BinaryTree<T> search(T val)
+            {
+                return _search(this, val);
+            }
+
+            public bool remove(T val)
+            {
+                //Проверяем, существует ли данный узел
+                BinaryTree<T> tree = search(val);
+                if (tree == null)
+                {
+                    //Если узла не существует, вернем false
+                    return false;
+                }
+                BinaryTree<T> curTree;
+
+                //Если удаляем корень
+                if (tree == this)
+                {
+                    if (tree.right != null)
+                    {
+                        curTree = tree.right;
+                    }
+                    else curTree = tree.left;
+
+                    while (curTree.left != null)
+                    {
+                        curTree = curTree.left;
+                    }
+                    T temp = curTree.val;
+                    this.remove(temp);
+                    tree.val = temp;
+
+                    return true;
+                }
+
+                //Удаление листьев
+                if (tree.left == null && tree.right == null && tree.parent != null)
+                {
+                    if (tree == tree.parent.left)
+                        tree.parent.left = null;
+                    else
+                    {
+                        tree.parent.right = null;
+                    }
+                    return true;
+                }
+
+                //Удаление узла, имеющего левое поддерево, но не имеющее правого поддерева
+                if (tree.left != null && tree.right == null)
+                {
+                    //Меняем родителя
+                    tree.left.parent = tree.parent;
+                    if (tree == tree.parent.left)
+                    {
+                        tree.parent.left = tree.left;
+                    }
+                    else if (tree == tree.parent.right)
+                    {
+                        tree.parent.right = tree.left;
+                    }
+                    return true;
+                }
+
+                //Удаление узла, имеющего правое поддерево, но не имеющее левого поддерева
+                if (tree.left == null && tree.right != null)
+                {
+                    //Меняем родителя
+                    tree.right.parent = tree.parent;
+                    if (tree == tree.parent.left)
+                    {
+                        tree.parent.left = tree.right;
+                    }
+                    else if (tree == tree.parent.right)
+                    {
+                        tree.parent.right = tree.right;
+                    }
+                    return true;
+                }
+
+                //Удаляем узел, имеющий поддеревья с обеих сторон
+                if (tree.right != null && tree.left != null)
+                {
+                    curTree = tree.right;
+
+                    while (curTree.left != null)
+                    {
+                        curTree = curTree.left;
+                    }
+
+                    //Если самый левый элемент является первым потомком
+                    if (curTree.parent == tree)
+                    {
+                        curTree.left = tree.left;
+                        tree.left.parent = curTree;
+                        curTree.parent = tree.parent;
+                        if (tree == tree.parent.left)
+                        {
+                            tree.parent.left = curTree;
+                        }
+                        else if (tree == tree.parent.right)
+                        {
+                            tree.parent.right = curTree;
+                        }
+                        return true;
+                    }
+                    //Если самый левый элемент НЕ является первым потомком
+                    else
+                    {
+                        if (curTree.right != null)
+                        {
+                            curTree.right.parent = curTree.parent;
+                        }
+                        curTree.parent.left = curTree.right;
+                        curTree.right = tree.right;
+                        curTree.left = tree.left;
+                        tree.left.parent = curTree;
+                        tree.right.parent = curTree;
+                        curTree.parent = tree.parent;
+                        if (tree == tree.parent.left)
+                        {
+                            tree.parent.left = curTree;
+                        }
+                        else if (tree == tree.parent.right)
+                        {
+                            tree.parent.right = curTree;
+                        }
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            private void _print(BinaryTree<T> node, bool isRight, StringBuilder sb)
+            {
+                if (node == null) return;
+                _print(node.left, false, sb);
+                string s = isRight ? "R:" : "L:";
+                Console.Write($"{s}{node} ");
+                sb.Append($"{s}{node} ");
+                if (node.right != null)
+                    _print(node.right, true, sb);
+            }
+
+            public string print()
+            {
+                StringBuilder sb = new StringBuilder();
+                _print(this, false, sb);
+                return sb.ToString();
+            }
+
+            public override string ToString()
+            {
+                return val.ToString();
+            }
+        }
+
+    }
+
+    public class SortTask5
+    {
+
+        private int[] mainItems;
+        private int[] sortedItems;
+
+        private Random _Random;
+
+        public SortTask5(int countOfElements)
+        {
+            _Random = new Random();
+            mainItems = new int[countOfElements];
+            sortedItems = new int[countOfElements];
+            for (int i = 0; i < mainItems.Length; i++)
+                mainItems[i] = _Random.Next(0, 100);
+        }
+
+        public string SortBubble()
+        {
+            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+
+            Array.Copy(mainItems, sortedItems, mainItems.Length);
+
+            long countOfReplacements = 0;
+            int unsortedSituations, temp;
+
+            do
+            {
+                unsortedSituations = 0;
+                for (int i = 1; i < sortedItems.Length; i++)
+                {
+                    if (sortedItems[i - 1] > sortedItems[i])
+                    {
+                        temp = sortedItems[i - 1];
+                        sortedItems[i - 1] = sortedItems[i];
+                        sortedItems[i] = temp;
+                        countOfReplacements++;
+                        unsortedSituations++;
+                    }
+                }
+            } while (unsortedSituations != 0);
+
+            timer.Stop();
+            return $"Сортировка пузырьком; прошло времени: {timer.Elapsed.TotalSeconds} сек; кол-во перестановок: {countOfReplacements}";
+        }
+
+        public string SortSelect()
+        {
+            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+
+            Array.Copy(mainItems, sortedItems, mainItems.Length);
+
+            long countOfReplacements = 0, indexOfMin = 0;
+            int temp;
+
+            for (int i = 0; i < sortedItems.Length-1; i++)
+            {
+                indexOfMin = i;
+                for (int j = i+1; j < sortedItems.Length; j++)
+                {
+                    if (sortedItems[j] < sortedItems[indexOfMin])
+                        indexOfMin = j;
+                }
+                temp = sortedItems[i];
+                sortedItems[i] = sortedItems[indexOfMin];
+                sortedItems[indexOfMin] = temp;
+                countOfReplacements++;
+            }
+
+            timer.Stop();
+            return $"Сортировка выбором; прошло времени: {timer.Elapsed.TotalSeconds} сек; кол-во перестановок: {countOfReplacements}";
+        }
+
+        public string SortPut()
+        {
+            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+
+            Array.Copy(mainItems, sortedItems, mainItems.Length);
+
+            long countOfReplacements = 0;
+
+            for (int i = 0; i < mainItems.Length; i++)
+            {
+                int j = i;
+                while (j > 0 && sortedItems[j - 1] > mainItems[i])
+                {
+                    sortedItems[j] = sortedItems[j - 1];
+                    j--;
+                    countOfReplacements++;
+                }
+                sortedItems[j] = mainItems[i];
+                countOfReplacements++;
+            }
+
+            timer.Stop();
+            return $"Сортировка вставкой; прошло времени: {timer.Elapsed.TotalSeconds} сек; кол-во перестановок: {countOfReplacements}";
+        }
+
+        public string SortShell()
+        {
+            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+
+            Array.Copy(mainItems, sortedItems, mainItems.Length);
+
+            long countOfReplacements = 0;
+
+            for (int step = sortedItems.Length / 2; step > 0; step /= 2)
+            {
+                for (int i = step, j; i < sortedItems.Length; i++)
+                {
+                    int temp = sortedItems[i];
+                    for (j = i; j >= step; j -= step)
+                    {
+                        if (temp < sortedItems[j - step])
+                        {
+                            sortedItems[j] = sortedItems[j - step];
+                            countOfReplacements++;
+                        }
+                        else
+                            break;
+                    }
+                    sortedItems[j] = temp;
+                    countOfReplacements++;
+                }
+            }
+
+            timer.Stop();
+            return $"Сортировка вставкой; прошло времени: {timer.Elapsed.TotalSeconds} сек; кол-во перестановок: {countOfReplacements}";
+        }
+
+        public string PrintMainElements()
+        {
+            return string.Join(", ", mainItems);
+        }
+
+        public string PrintSortedElements()
+        {
+            return string.Join(", ", sortedItems);
         }
 
     }

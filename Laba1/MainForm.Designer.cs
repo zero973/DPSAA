@@ -72,9 +72,29 @@
             this.btnTask24 = new System.Windows.Forms.Button();
             this.lbTask24 = new System.Windows.Forms.Label();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.cbTask33AddElementVariants = new System.Windows.Forms.ComboBox();
+            this.cbTask33DeleteVariants = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.nudTask33ListIndex = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.nudTask33Element = new System.Windows.Forms.NumericUpDown();
+            this.btnTask33DeleteElement = new System.Windows.Forms.Button();
+            this.btnTask33AddElement = new System.Windows.Forms.Button();
+            this.nudTask33FindElement = new System.Windows.Forms.NumericUpDown();
+            this.btnTask33FindElement = new System.Windows.Forms.Button();
+            this.lbTask33 = new System.Windows.Forms.Label();
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.tbTreeTask4 = new System.Windows.Forms.TextBox();
+            this.btnTreeTask4DeleteElement = new System.Windows.Forms.Button();
+            this.nudTreeTask4Element = new System.Windows.Forms.NumericUpDown();
+            this.btnTreeTask4AddElement = new System.Windows.Forms.Button();
             this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.btnSortTask5CreateNewArray = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.nudTask5SortCountOfElements = new System.Windows.Forms.NumericUpDown();
+            this.cbSortTask5SortVariant = new System.Windows.Forms.ComboBox();
+            this.btnSortTask5Sort = new System.Windows.Forms.Button();
+            this.tbSortTask5 = new System.Windows.Forms.TextBox();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -89,6 +109,13 @@
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTask24Element)).BeginInit();
             this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask33ListIndex)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask33Element)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask33FindElement)).BeginInit();
+            this.tabPage8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTreeTask4Element)).BeginInit();
+            this.tabPage9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask5SortCountOfElements)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage6
@@ -619,7 +646,17 @@
             // 
             // tabPage7
             // 
-            this.tabPage7.Controls.Add(this.label1);
+            this.tabPage7.Controls.Add(this.cbTask33AddElementVariants);
+            this.tabPage7.Controls.Add(this.cbTask33DeleteVariants);
+            this.tabPage7.Controls.Add(this.label3);
+            this.tabPage7.Controls.Add(this.nudTask33ListIndex);
+            this.tabPage7.Controls.Add(this.label2);
+            this.tabPage7.Controls.Add(this.nudTask33Element);
+            this.tabPage7.Controls.Add(this.btnTask33DeleteElement);
+            this.tabPage7.Controls.Add(this.btnTask33AddElement);
+            this.tabPage7.Controls.Add(this.nudTask33FindElement);
+            this.tabPage7.Controls.Add(this.btnTask33FindElement);
+            this.tabPage7.Controls.Add(this.lbTask33);
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Size = new System.Drawing.Size(904, 233);
@@ -627,8 +664,148 @@
             this.tabPage7.Text = "Список списков";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
+            // cbTask33AddElementVariants
+            // 
+            this.cbTask33AddElementVariants.FormattingEnabled = true;
+            this.cbTask33AddElementVariants.Items.AddRange(new object[] {
+            "В существующий список",
+            "В новый список"});
+            this.cbTask33AddElementVariants.Location = new System.Drawing.Point(276, 68);
+            this.cbTask33AddElementVariants.Name = "cbTask33AddElementVariants";
+            this.cbTask33AddElementVariants.Size = new System.Drawing.Size(138, 21);
+            this.cbTask33AddElementVariants.TabIndex = 21;
+            // 
+            // cbTask33DeleteVariants
+            // 
+            this.cbTask33DeleteVariants.FormattingEnabled = true;
+            this.cbTask33DeleteVariants.Items.AddRange(new object[] {
+            "Удалить элемент",
+            "Удалить список"});
+            this.cbTask33DeleteVariants.Location = new System.Drawing.Point(276, 115);
+            this.cbTask33DeleteVariants.Name = "cbTask33DeleteVariants";
+            this.cbTask33DeleteVariants.Size = new System.Drawing.Size(138, 21);
+            this.cbTask33DeleteVariants.TabIndex = 20;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(610, 94);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 13);
+            this.label3.TabIndex = 19;
+            this.label3.Text = "Индекс списка:";
+            // 
+            // nudTask33ListIndex
+            // 
+            this.nudTask33ListIndex.Location = new System.Drawing.Point(703, 92);
+            this.nudTask33ListIndex.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.nudTask33ListIndex.Name = "nudTask33ListIndex";
+            this.nudTask33ListIndex.Size = new System.Drawing.Size(120, 20);
+            this.nudTask33ListIndex.TabIndex = 18;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(424, 94);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Элемент:";
+            // 
+            // nudTask33Element
+            // 
+            this.nudTask33Element.Location = new System.Drawing.Point(484, 92);
+            this.nudTask33Element.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.nudTask33Element.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudTask33Element.Name = "nudTask33Element";
+            this.nudTask33Element.Size = new System.Drawing.Size(120, 20);
+            this.nudTask33Element.TabIndex = 16;
+            this.nudTask33Element.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // btnTask33DeleteElement
+            // 
+            this.btnTask33DeleteElement.Location = new System.Drawing.Point(182, 100);
+            this.btnTask33DeleteElement.Name = "btnTask33DeleteElement";
+            this.btnTask33DeleteElement.Size = new System.Drawing.Size(85, 48);
+            this.btnTask33DeleteElement.TabIndex = 15;
+            this.btnTask33DeleteElement.Text = "Удалить элемент/список";
+            this.btnTask33DeleteElement.UseVisualStyleBackColor = true;
+            this.btnTask33DeleteElement.Click += new System.EventHandler(this.btnTask33DeleteElement_Click);
+            // 
+            // btnTask33AddElement
+            // 
+            this.btnTask33AddElement.Location = new System.Drawing.Point(182, 60);
+            this.btnTask33AddElement.Name = "btnTask33AddElement";
+            this.btnTask33AddElement.Size = new System.Drawing.Size(85, 34);
+            this.btnTask33AddElement.TabIndex = 14;
+            this.btnTask33AddElement.Text = "Добавить элемент";
+            this.btnTask33AddElement.UseVisualStyleBackColor = true;
+            this.btnTask33AddElement.Click += new System.EventHandler(this.btnTask33AddElement_Click);
+            // 
+            // nudTask33FindElement
+            // 
+            this.nudTask33FindElement.Location = new System.Drawing.Point(273, 29);
+            this.nudTask33FindElement.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.nudTask33FindElement.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudTask33FindElement.Name = "nudTask33FindElement";
+            this.nudTask33FindElement.Size = new System.Drawing.Size(229, 20);
+            this.nudTask33FindElement.TabIndex = 13;
+            this.nudTask33FindElement.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // btnTask33FindElement
+            // 
+            this.btnTask33FindElement.Location = new System.Drawing.Point(182, 20);
+            this.btnTask33FindElement.Name = "btnTask33FindElement";
+            this.btnTask33FindElement.Size = new System.Drawing.Size(85, 34);
+            this.btnTask33FindElement.TabIndex = 12;
+            this.btnTask33FindElement.Text = "Найти элемент";
+            this.btnTask33FindElement.UseVisualStyleBackColor = true;
+            this.btnTask33FindElement.Click += new System.EventHandler(this.btnTask33FindElement_Click);
+            // 
+            // lbTask33
+            // 
+            this.lbTask33.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbTask33.Location = new System.Drawing.Point(8, 10);
+            this.lbTask33.Name = "lbTask33";
+            this.lbTask33.Size = new System.Drawing.Size(168, 212);
+            this.lbTask33.TabIndex = 10;
+            this.lbTask33.Text = "Список списков:\r\n(пусто)";
+            this.lbTask33.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // tabPage8
             // 
+            this.tabPage8.Controls.Add(this.tbTreeTask4);
+            this.tabPage8.Controls.Add(this.btnTreeTask4DeleteElement);
+            this.tabPage8.Controls.Add(this.nudTreeTask4Element);
+            this.tabPage8.Controls.Add(this.btnTreeTask4AddElement);
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Size = new System.Drawing.Size(904, 233);
@@ -636,8 +813,67 @@
             this.tabPage8.Text = "Дерево";
             this.tabPage8.UseVisualStyleBackColor = true;
             // 
+            // tbTreeTask4
+            // 
+            this.tbTreeTask4.Location = new System.Drawing.Point(6, 7);
+            this.tbTreeTask4.Multiline = true;
+            this.tbTreeTask4.Name = "tbTreeTask4";
+            this.tbTreeTask4.ReadOnly = true;
+            this.tbTreeTask4.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbTreeTask4.Size = new System.Drawing.Size(890, 63);
+            this.tbTreeTask4.TabIndex = 16;
+            this.tbTreeTask4.Text = "Дерево:\r\n(пусто)\r\n";
+            // 
+            // btnTreeTask4DeleteElement
+            // 
+            this.btnTreeTask4DeleteElement.Location = new System.Drawing.Point(8, 133);
+            this.btnTreeTask4DeleteElement.Name = "btnTreeTask4DeleteElement";
+            this.btnTreeTask4DeleteElement.Size = new System.Drawing.Size(130, 23);
+            this.btnTreeTask4DeleteElement.TabIndex = 15;
+            this.btnTreeTask4DeleteElement.Text = "Удалить элемент";
+            this.btnTreeTask4DeleteElement.UseVisualStyleBackColor = true;
+            this.btnTreeTask4DeleteElement.Click += new System.EventHandler(this.btnTreeTask4DeleteElement_Click);
+            // 
+            // nudTreeTask4Element
+            // 
+            this.nudTreeTask4Element.Location = new System.Drawing.Point(144, 136);
+            this.nudTreeTask4Element.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.nudTreeTask4Element.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudTreeTask4Element.Name = "nudTreeTask4Element";
+            this.nudTreeTask4Element.Size = new System.Drawing.Size(130, 20);
+            this.nudTreeTask4Element.TabIndex = 14;
+            this.nudTreeTask4Element.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // btnTreeTask4AddElement
+            // 
+            this.btnTreeTask4AddElement.Location = new System.Drawing.Point(8, 104);
+            this.btnTreeTask4AddElement.Name = "btnTreeTask4AddElement";
+            this.btnTreeTask4AddElement.Size = new System.Drawing.Size(130, 23);
+            this.btnTreeTask4AddElement.TabIndex = 12;
+            this.btnTreeTask4AddElement.Text = "Добавить элемент";
+            this.btnTreeTask4AddElement.UseVisualStyleBackColor = true;
+            this.btnTreeTask4AddElement.Click += new System.EventHandler(this.btnTreeTask4AddElement_Click);
+            // 
             // tabPage9
             // 
+            this.tabPage9.Controls.Add(this.btnSortTask5CreateNewArray);
+            this.tabPage9.Controls.Add(this.label1);
+            this.tabPage9.Controls.Add(this.nudTask5SortCountOfElements);
+            this.tabPage9.Controls.Add(this.cbSortTask5SortVariant);
+            this.tabPage9.Controls.Add(this.btnSortTask5Sort);
+            this.tabPage9.Controls.Add(this.tbSortTask5);
             this.tabPage9.Location = new System.Drawing.Point(4, 22);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Size = new System.Drawing.Size(904, 233);
@@ -645,15 +881,80 @@
             this.tabPage9.Text = "Сортировки";
             this.tabPage9.UseVisualStyleBackColor = true;
             // 
+            // btnSortTask5CreateNewArray
+            // 
+            this.btnSortTask5CreateNewArray.Location = new System.Drawing.Point(8, 90);
+            this.btnSortTask5CreateNewArray.Name = "btnSortTask5CreateNewArray";
+            this.btnSortTask5CreateNewArray.Size = new System.Drawing.Size(158, 23);
+            this.btnSortTask5CreateNewArray.TabIndex = 22;
+            this.btnSortTask5CreateNewArray.Text = "Создать новый массив";
+            this.btnSortTask5CreateNewArray.UseVisualStyleBackColor = true;
+            this.btnSortTask5CreateNewArray.Click += new System.EventHandler(this.btnSortTask5CreateNewArray_Click);
+            // 
             // label1
             // 
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Location = new System.Drawing.Point(8, 10);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 161);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(137, 212);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Список списков:\r\n(пусто)";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label1.Size = new System.Drawing.Size(158, 13);
+            this.label1.TabIndex = 21;
+            this.label1.Text = "Кол-во элементов в массиве:";
+            // 
+            // nudTask5SortCountOfElements
+            // 
+            this.nudTask5SortCountOfElements.Location = new System.Drawing.Point(172, 159);
+            this.nudTask5SortCountOfElements.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.nudTask5SortCountOfElements.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nudTask5SortCountOfElements.Name = "nudTask5SortCountOfElements";
+            this.nudTask5SortCountOfElements.Size = new System.Drawing.Size(120, 20);
+            this.nudTask5SortCountOfElements.TabIndex = 20;
+            this.nudTask5SortCountOfElements.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // cbSortTask5SortVariant
+            // 
+            this.cbSortTask5SortVariant.FormattingEnabled = true;
+            this.cbSortTask5SortVariant.Items.AddRange(new object[] {
+            "Методом пузырька",
+            "Методом выбора",
+            "Методом вставки",
+            "Методом Шелла"});
+            this.cbSortTask5SortVariant.Location = new System.Drawing.Point(135, 121);
+            this.cbSortTask5SortVariant.Name = "cbSortTask5SortVariant";
+            this.cbSortTask5SortVariant.Size = new System.Drawing.Size(146, 21);
+            this.cbSortTask5SortVariant.TabIndex = 19;
+            // 
+            // btnSortTask5Sort
+            // 
+            this.btnSortTask5Sort.Location = new System.Drawing.Point(8, 119);
+            this.btnSortTask5Sort.Name = "btnSortTask5Sort";
+            this.btnSortTask5Sort.Size = new System.Drawing.Size(121, 23);
+            this.btnSortTask5Sort.TabIndex = 18;
+            this.btnSortTask5Sort.Text = "Отсортировать";
+            this.btnSortTask5Sort.UseVisualStyleBackColor = true;
+            this.btnSortTask5Sort.Click += new System.EventHandler(this.btnSortTask5Sort_Click);
+            // 
+            // tbSortTask5
+            // 
+            this.tbSortTask5.Location = new System.Drawing.Point(6, 9);
+            this.tbSortTask5.Multiline = true;
+            this.tbSortTask5.Name = "tbSortTask5";
+            this.tbSortTask5.ReadOnly = true;
+            this.tbSortTask5.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbSortTask5.Size = new System.Drawing.Size(890, 63);
+            this.tbSortTask5.TabIndex = 17;
+            this.tbSortTask5.Text = "Исходный массив: (пусто)\r\nОтсортированный массив: (пусто)\r\n";
             // 
             // MainForm
             // 
@@ -678,6 +979,16 @@
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nudTask24Element)).EndInit();
             this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask33ListIndex)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask33Element)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask33FindElement)).EndInit();
+            this.tabPage8.ResumeLayout(false);
+            this.tabPage8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTreeTask4Element)).EndInit();
+            this.tabPage9.ResumeLayout(false);
+            this.tabPage9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTask5SortCountOfElements)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -730,7 +1041,27 @@
         private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.TabPage tabPage8;
         private System.Windows.Forms.TabPage tabPage9;
+        private System.Windows.Forms.Label lbTask33;
+        private System.Windows.Forms.NumericUpDown nudTask33FindElement;
+        private System.Windows.Forms.Button btnTask33FindElement;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown nudTask33ListIndex;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown nudTask33Element;
+        private System.Windows.Forms.Button btnTask33DeleteElement;
+        private System.Windows.Forms.Button btnTask33AddElement;
+        private System.Windows.Forms.ComboBox cbTask33AddElementVariants;
+        private System.Windows.Forms.ComboBox cbTask33DeleteVariants;
+        private System.Windows.Forms.Button btnTreeTask4DeleteElement;
+        private System.Windows.Forms.NumericUpDown nudTreeTask4Element;
+        private System.Windows.Forms.Button btnTreeTask4AddElement;
+        private System.Windows.Forms.TextBox tbTreeTask4;
+        private System.Windows.Forms.TextBox tbSortTask5;
+        private System.Windows.Forms.ComboBox cbSortTask5SortVariant;
+        private System.Windows.Forms.Button btnSortTask5Sort;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown nudTask5SortCountOfElements;
+        private System.Windows.Forms.Button btnSortTask5CreateNewArray;
     }
 }
 
