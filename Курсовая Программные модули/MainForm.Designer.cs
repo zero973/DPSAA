@@ -45,7 +45,7 @@
             this.tbModuleName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lbModules = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lbMyPrograms = new System.Windows.Forms.Label();
             this.btnProgramEdit = new System.Windows.Forms.Button();
             this.btnProgramLoad = new System.Windows.Forms.Button();
             this.btnProgramDelete = new System.Windows.Forms.Button();
@@ -54,9 +54,17 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tbProgramName = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnExportData = new System.Windows.Forms.Button();
+            this.btnChooseFile = new System.Windows.Forms.Button();
+            this.tbFilePath = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnImportData = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.nudSmallProgramRowsCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudModuleId)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudProgramId)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSmallProgrammsClear
@@ -67,6 +75,7 @@
             this.btnSmallProgrammsClear.TabIndex = 42;
             this.btnSmallProgrammsClear.Text = "Очистить";
             this.btnSmallProgrammsClear.UseVisualStyleBackColor = true;
+            this.btnSmallProgrammsClear.Click += new System.EventHandler(this.btnSmallProgrammsClear_Click);
             // 
             // btnModuleEdit
             // 
@@ -76,15 +85,17 @@
             this.btnModuleEdit.TabIndex = 41;
             this.btnModuleEdit.Text = "Изменить";
             this.btnModuleEdit.UseVisualStyleBackColor = true;
+            this.btnModuleEdit.Click += new System.EventHandler(this.btnModuleEdit_Click);
             // 
             // btnLoadModule
             // 
             this.btnLoadModule.Location = new System.Drawing.Point(653, 157);
             this.btnLoadModule.Name = "btnLoadModule";
-            this.btnLoadModule.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadModule.Size = new System.Drawing.Size(156, 23);
             this.btnLoadModule.TabIndex = 40;
-            this.btnLoadModule.Text = "Загрузить";
+            this.btnLoadModule.Text = "Загрузить подпрограммы";
             this.btnLoadModule.UseVisualStyleBackColor = true;
+            this.btnLoadModule.Click += new System.EventHandler(this.btnLoadModule_Click);
             // 
             // btnSmallProgramDelete
             // 
@@ -94,6 +105,7 @@
             this.btnSmallProgramDelete.TabIndex = 39;
             this.btnSmallProgramDelete.Text = "Удалить";
             this.btnSmallProgramDelete.UseVisualStyleBackColor = true;
+            this.btnSmallProgramDelete.Click += new System.EventHandler(this.btnSmallProgramDelete_Click);
             // 
             // btnSmallProgramAdd
             // 
@@ -103,6 +115,7 @@
             this.btnSmallProgramAdd.TabIndex = 38;
             this.btnSmallProgramAdd.Text = "Добавить";
             this.btnSmallProgramAdd.UseVisualStyleBackColor = true;
+            this.btnSmallProgramAdd.Click += new System.EventHandler(this.btnSmallProgramAdd_Click);
             // 
             // nudSmallProgramRowsCount
             // 
@@ -169,6 +182,7 @@
             this.btnDeleteModule.TabIndex = 32;
             this.btnDeleteModule.Text = "Удалить";
             this.btnDeleteModule.UseVisualStyleBackColor = true;
+            this.btnDeleteModule.Click += new System.EventHandler(this.btnDeleteModule_Click);
             // 
             // btnAddModule
             // 
@@ -178,17 +192,18 @@
             this.btnAddModule.TabIndex = 31;
             this.btnAddModule.Text = "Добавить";
             this.btnAddModule.UseVisualStyleBackColor = true;
+            this.btnAddModule.Click += new System.EventHandler(this.btnAddModule_Click);
             // 
             // nudModuleId
             // 
-            this.nudModuleId.Location = new System.Drawing.Point(732, 19);
+            this.nudModuleId.Location = new System.Drawing.Point(716, 19);
             this.nudModuleId.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
             this.nudModuleId.Name = "nudModuleId";
-            this.nudModuleId.Size = new System.Drawing.Size(145, 20);
+            this.nudModuleId.Size = new System.Drawing.Size(163, 20);
             this.nudModuleId.TabIndex = 30;
             // 
             // label3
@@ -196,9 +211,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(650, 21);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(19, 13);
+            this.label3.Size = new System.Drawing.Size(59, 13);
             this.label3.TabIndex = 29;
-            this.label3.Text = "Id:";
+            this.label3.Text = "Id модуля:";
             // 
             // tbModuleName
             // 
@@ -226,15 +241,15 @@
             this.lbModules.Text = "Модули:";
             this.lbModules.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // label5
+            // lbMyPrograms
             // 
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(12, 261);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(350, 287);
-            this.label5.TabIndex = 43;
-            this.label5.Text = "Программы:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lbMyPrograms.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbMyPrograms.Location = new System.Drawing.Point(12, 261);
+            this.lbMyPrograms.Name = "lbMyPrograms";
+            this.lbMyPrograms.Size = new System.Drawing.Size(350, 287);
+            this.lbMyPrograms.TabIndex = 43;
+            this.lbMyPrograms.Text = "Программы:";
+            this.lbMyPrograms.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnProgramEdit
             // 
@@ -250,9 +265,9 @@
             // 
             this.btnProgramLoad.Location = new System.Drawing.Point(371, 383);
             this.btnProgramLoad.Name = "btnProgramLoad";
-            this.btnProgramLoad.Size = new System.Drawing.Size(75, 23);
+            this.btnProgramLoad.Size = new System.Drawing.Size(122, 23);
             this.btnProgramLoad.TabIndex = 46;
-            this.btnProgramLoad.Text = "Загрузить";
+            this.btnProgramLoad.Text = "Загрузить модули";
             this.btnProgramLoad.UseVisualStyleBackColor = true;
             this.btnProgramLoad.Click += new System.EventHandler(this.btnProgramLoad_Click);
             // 
@@ -293,9 +308,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(368, 277);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(19, 13);
+            this.label6.Size = new System.Drawing.Size(81, 13);
             this.label6.TabIndex = 50;
-            this.label6.Text = "Id:";
+            this.label6.Text = "Id программы:";
             // 
             // tbProgramName
             // 
@@ -313,11 +328,77 @@
             this.label7.TabIndex = 48;
             this.label7.Text = "Название:";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnExportData);
+            this.groupBox1.Controls.Add(this.btnChooseFile);
+            this.groupBox1.Controls.Add(this.tbFilePath);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.btnImportData);
+            this.groupBox1.Location = new System.Drawing.Point(653, 277);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(232, 240);
+            this.groupBox1.TabIndex = 52;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Загрузка и выгрузка";
+            // 
+            // btnExportData
+            // 
+            this.btnExportData.Location = new System.Drawing.Point(90, 52);
+            this.btnExportData.Name = "btnExportData";
+            this.btnExportData.Size = new System.Drawing.Size(75, 51);
+            this.btnExportData.TabIndex = 51;
+            this.btnExportData.Text = "Выгрузить данные в файл";
+            this.btnExportData.UseVisualStyleBackColor = true;
+            this.btnExportData.Click += new System.EventHandler(this.btnExportData_Click);
+            // 
+            // btnChooseFile
+            // 
+            this.btnChooseFile.Location = new System.Drawing.Point(201, 18);
+            this.btnChooseFile.Name = "btnChooseFile";
+            this.btnChooseFile.Size = new System.Drawing.Size(25, 23);
+            this.btnChooseFile.TabIndex = 50;
+            this.btnChooseFile.Text = "...";
+            this.btnChooseFile.UseVisualStyleBackColor = true;
+            this.btnChooseFile.Click += new System.EventHandler(this.btnChooseFile_Click);
+            // 
+            // tbFilePath
+            // 
+            this.tbFilePath.Location = new System.Drawing.Point(48, 19);
+            this.tbFilePath.Name = "tbFilePath";
+            this.tbFilePath.ReadOnly = true;
+            this.tbFilePath.Size = new System.Drawing.Size(147, 20);
+            this.tbFilePath.TabIndex = 49;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 22);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(39, 13);
+            this.label5.TabIndex = 48;
+            this.label5.Text = "Файл:";
+            // 
+            // btnImportData
+            // 
+            this.btnImportData.Location = new System.Drawing.Point(9, 52);
+            this.btnImportData.Name = "btnImportData";
+            this.btnImportData.Size = new System.Drawing.Size(75, 51);
+            this.btnImportData.TabIndex = 47;
+            this.btnImportData.Text = "Загрузить данные из файла";
+            this.btnImportData.UseVisualStyleBackColor = true;
+            this.btnImportData.Click += new System.EventHandler(this.btnImportData_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(897, 573);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.nudProgramId);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.tbProgramName);
@@ -326,7 +407,7 @@
             this.Controls.Add(this.btnProgramLoad);
             this.Controls.Add(this.btnProgramDelete);
             this.Controls.Add(this.btnProgramAdd);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lbMyPrograms);
             this.Controls.Add(this.btnSmallProgrammsClear);
             this.Controls.Add(this.btnModuleEdit);
             this.Controls.Add(this.btnLoadModule);
@@ -350,6 +431,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudSmallProgramRowsCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudModuleId)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudProgramId)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -374,7 +457,7 @@
         private System.Windows.Forms.TextBox tbModuleName;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lbModules;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lbMyPrograms;
         private System.Windows.Forms.Button btnProgramEdit;
         private System.Windows.Forms.Button btnProgramLoad;
         private System.Windows.Forms.Button btnProgramDelete;
@@ -383,6 +466,13 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbProgramName;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnExportData;
+        private System.Windows.Forms.Button btnChooseFile;
+        private System.Windows.Forms.TextBox tbFilePath;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnImportData;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

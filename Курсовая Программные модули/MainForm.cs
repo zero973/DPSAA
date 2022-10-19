@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Курсовая_Программные_модули
@@ -27,7 +26,7 @@ namespace Курсовая_Программные_модули
             MyPrograms = new LinkedList<MyProgram>();
 
             MakeTestData();
-            ModulesUpdateUI();
+            UpdateUI();
         }
 
         #region Подпрограммы
@@ -43,7 +42,7 @@ namespace Курсовая_Программные_модули
             if (!SmallProgramms.Add(new SmallProgram(tbSmallProgramName.Text, (int)nudSmallProgramRowsCount.Value)))
                 ShowMessage("Не удалось добавить элемент. Стек полон или элемент с таким названием уже имеется в стеке.");
 
-            SmallProgramUpdateUI();
+            UpdateUI();
         }
 
         private void btnSmallProgramDelete_Click(object sender, EventArgs e)
@@ -51,7 +50,7 @@ namespace Курсовая_Программные_модули
             if (!SmallProgramms.Remove())
                 ShowMessage("Не удалось удалить элемент. Стек пуст.");
 
-            SmallProgramUpdateUI();
+            UpdateUI();
         }
 
         private void btnSmallProgrammsClear_Click(object sender, EventArgs e)
@@ -60,12 +59,7 @@ namespace Курсовая_Программные_модули
             tbSmallProgramName.Text = "";
             nudSmallProgramRowsCount.Value = nudSmallProgramRowsCount.Minimum;
 
-            SmallProgramUpdateUI();
-        }
-
-        private void SmallProgramUpdateUI()
-        {
-            lbSmallPrograms.Text = $"Подпрограммы:{Environment.NewLine}{SmallProgramms.Print(Environment.NewLine)}";
+            UpdateUI();
         }
 
         #endregion
@@ -84,8 +78,7 @@ namespace Курсовая_Программные_модули
             tbModuleName.Text = module.Name;
             SmallProgramms = module.SmallPrograms;
 
-            ModulesUpdateUI();
-            SmallProgramUpdateUI();
+            UpdateUI();
         }
 
         private void btnAddModule_Click(object sender, EventArgs e)
@@ -96,13 +89,12 @@ namespace Курсовая_Программные_модули
                 return;
             }
 
-            CheckModuleData();
+            CheckModuleData(false);
 
             Modules.AddLast(new LinkedListNode<Module>(new Module(tbModuleName.Text, SmallProgramms)));
             SmallProgramms = new ArrayStek<SmallProgram>(10);
 
-            ModulesUpdateUI();
-            SmallProgramUpdateUI();
+            UpdateUI();
         }
 
         private void btnModuleEdit_Click(object sender, EventArgs e)
@@ -113,15 +105,15 @@ namespace Курсовая_Программные_модули
                 return;
             }
 
-            CheckModuleData();
+            if (!CheckModuleData(true))
+                return;
 
             var module = Modules.ElementAt((int)nudModuleId.Value);
             module.Name = tbModuleName.Text;
             module.SmallPrograms = SmallProgramms;
             SmallProgramms = new ArrayStek<SmallProgram>(10);
 
-            ModulesUpdateUI();
-            SmallProgramUpdateUI();
+            UpdateUI();
         }
 
         private void btnDeleteModule_Click(object sender, EventArgs e)
@@ -134,17 +126,13 @@ namespace Курсовая_Программные_модули
 
             Modules.Remove(Modules.ElementAt((int)nudModuleId.Value));
 
-            ModulesUpdateUI();
+            UpdateUI();
         }
 
-        private void ModulesUpdateUI()
+        private bool CheckModuleData(bool isCheckYourself)
         {
-            lbModules.Text = $"Модули:{Environment.NewLine}{string.Join(Environment.NewLine, Modules)}";
-        }
-
-        private bool CheckModuleData()
-        {
-            if (Modules.Where(x => x != Modules.ElementAt((int)nudModuleId.Value)).Any(x => x.Name == tbModuleName.Text))
+            if (Modules.Where(x => isCheckYourself ? x != Modules.ElementAt((int)nudModuleId.Value) : true)
+                .Any(x => x.Name == tbModuleName.Text))
             {
                 ShowMessage("Модуль с таким названием уже есть. Введите другое название");
                 return false;
@@ -165,25 +153,132 @@ namespace Курсовая_Программные_модули
 
         private void btnProgramLoad_Click(object sender, EventArgs e)
         {
+            if ((int)nudProgramId.Value >= MyPrograms.Count)
+            {
+                ShowMessage("Не удалось найти программу по заданному Id.");
+                return;
+            }
 
+            var program = MyPrograms.ElementAt((int)nudProgramId.Value);
+            tbProgramName.Text = program.Name;
+            Modules = program.Modules;
+            SmallProgramms = Modules.First().SmallPrograms;
+
+            UpdateUI();
         }
 
         private void btnProgramAdd_Click(object sender, EventArgs e)
         {
+            if (!ValidateField(tbProgramName))
+            {
+                ShowMessage("Название программы пустое. Пожалуйста, заполните его.");
+                return;
+            }
 
+            if (!CheckProgramData(false))
+                return;
+
+            MyPrograms.AddLast(new LinkedListNode<MyProgram>(new MyProgram(tbProgramName.Text, Modules)));
+            Modules = new LinkedList<Module>();
+
+            UpdateUI();
         }
 
         private void btnProgramEdit_Click(object sender, EventArgs e)
         {
+            if ((int)nudProgramId.Value >= MyPrograms.Count)
+            {
+                ShowMessage("Не удалось найти программу по заданному Id.");
+                return;
+            }
 
+            if (!CheckProgramData(true))
+                return;
+
+            var program = MyPrograms.ElementAt((int)nudProgramId.Value);
+            program.Name = tbProgramName.Text;
+            program.Modules = Modules;
+            Modules = new LinkedList<Module>();
+
+            UpdateUI();
         }
 
         private void btnProgramDelete_Click(object sender, EventArgs e)
         {
+            if ((int)nudProgramId.Value >= MyPrograms.Count)
+            {
+                ShowMessage("Не удалось найти программу по заданному Id.");
+                return;
+            }
 
+            MyPrograms.Remove(MyPrograms.ElementAt((int)nudProgramId.Value));
+
+            UpdateUI();
+        }
+
+        private bool CheckProgramData(bool isCheckYourself)
+        {
+            if (MyPrograms.Where(x => isCheckYourself ? x != MyPrograms.ElementAt((int)nudProgramId.Value) : true)
+                .Any(x => x.Name == tbProgramName.Text))
+            {
+                ShowMessage("Программа с таким названием уже есть. Введите другое название");
+                return false;
+            }
+
+            if (!Modules.Any())
+            {
+                ShowMessage("Отсутствуют модули в программе. Добавьте их");
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
+
+        #region Загрузка и выгрузка
+
+        private void btnChooseFile_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                tbFilePath.Text = openFileDialog1.FileName;
+            }
+        }
+
+        private void btnImportData_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(tbFilePath.Text))
+            {
+                ShowMessage("Не выбран файл для импорта");
+                return;
+            }
+
+            MyPrograms = JsonConvert.DeserializeObject<LinkedList<MyProgram>>(File.ReadAllText(tbFilePath.Text));
+            UpdateUI();
+            ShowMessage("Данные успешно загружены");
+        }
+
+        private void btnExportData_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(tbFilePath.Text))
+            {
+                ShowMessage("Не выбран файл для экспорта");
+                return;
+            }
+
+            File.WriteAllText(tbFilePath.Text, JsonConvert.SerializeObject(MyPrograms));
+            ShowMessage("Данные успешно экспортированы");
+        }
+
+        #endregion
+
+        private void UpdateUI()
+        {
+            lbSmallPrograms.Text = $"Подпрограммы:{Environment.NewLine}{SmallProgramms.Print(Environment.NewLine)}";
+            lbModules.Text = $"Модули:{Environment.NewLine}{string.Join(Environment.NewLine, Modules)}";
+            lbMyPrograms.Text = $"Программы:{Environment.NewLine}{string.Join(Environment.NewLine, MyPrograms)}";
+        }
 
         private bool ValidateField(TextBox field)
         {
@@ -214,8 +309,9 @@ namespace Курсовая_Программные_модули
             SmallProgramms.Add(new SmallProgram("Подпрога9", 64));
             Modules.AddLast(new LinkedListNode<Module>(new Module("Модуль3", SmallProgramms)));
             SmallProgramms = new ArrayStek<SmallProgram>(10);
+            MyPrograms.AddFirst(new LinkedListNode<MyProgram>(new MyProgram("Программа1", Modules)));
+            Modules = new LinkedList<Module>();
         }
-
     }
 
     public class SmallProgram
@@ -261,7 +357,7 @@ namespace Курсовая_Программные_модули
         public override bool Equals(object obj)
         {
             Module other = obj as Module;
-            return other.Name.Equals(Name);
+            return other?.Name.Equals(Name) ?? false;
         }
 
         public override string ToString()
@@ -286,8 +382,8 @@ namespace Курсовая_Программные_модули
 
         public override bool Equals(object obj)
         {
-            Module other = obj as Module;
-            return other.Name.Equals(Name);
+            MyProgram other = obj as MyProgram;
+            return other?.Name.Equals(Name) ?? false;
         }
 
         public override string ToString()
@@ -300,8 +396,10 @@ namespace Курсовая_Программные_модули
     public class ArrayStek<T>
     {
 
+        [JsonProperty]
         private T[] Items;
 
+        [JsonProperty]
         private int CurIndex;
 
         public ArrayStek(int size)
@@ -347,10 +445,7 @@ namespace Курсовая_Программные_модули
 
         public string Print(string delimeter)
         {
-            return string.Join(delimeter, Items.Where(x =>
-            {
-                return x == null ? false : true;
-            }));
+            return string.Join(delimeter, Items.Where(x => x != null));
         }
 
     }
