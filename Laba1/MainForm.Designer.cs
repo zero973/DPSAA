@@ -72,6 +72,8 @@
             this.btnTask24 = new System.Windows.Forms.Button();
             this.lbTask24 = new System.Windows.Forms.Label();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.cbTask33AddVariants = new System.Windows.Forms.ComboBox();
+            this.cbTask33SearchDirection = new System.Windows.Forms.ComboBox();
             this.cbTask33AddElementVariants = new System.Windows.Forms.ComboBox();
             this.cbTask33DeleteVariants = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -646,6 +648,8 @@
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.cbTask33AddVariants);
+            this.tabPage7.Controls.Add(this.cbTask33SearchDirection);
             this.tabPage7.Controls.Add(this.cbTask33AddElementVariants);
             this.tabPage7.Controls.Add(this.cbTask33DeleteVariants);
             this.tabPage7.Controls.Add(this.label3);
@@ -664,13 +668,36 @@
             this.tabPage7.Text = "Список списков";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
+            // cbTask33AddVariants
+            // 
+            this.cbTask33AddVariants.FormattingEnabled = true;
+            this.cbTask33AddVariants.Items.AddRange(new object[] {
+            "Слева от заданного элемента",
+            "Справа от заданного элемента",
+            "В конце"});
+            this.cbTask33AddVariants.Location = new System.Drawing.Point(585, 68);
+            this.cbTask33AddVariants.Name = "cbTask33AddVariants";
+            this.cbTask33AddVariants.Size = new System.Drawing.Size(208, 21);
+            this.cbTask33AddVariants.TabIndex = 23;
+            // 
+            // cbTask33SearchDirection
+            // 
+            this.cbTask33SearchDirection.FormattingEnabled = true;
+            this.cbTask33SearchDirection.Items.AddRange(new object[] {
+            "В прямом порядке",
+            "В обратном порядке"});
+            this.cbTask33SearchDirection.Location = new System.Drawing.Point(673, 28);
+            this.cbTask33SearchDirection.Name = "cbTask33SearchDirection";
+            this.cbTask33SearchDirection.Size = new System.Drawing.Size(159, 21);
+            this.cbTask33SearchDirection.TabIndex = 22;
+            // 
             // cbTask33AddElementVariants
             // 
             this.cbTask33AddElementVariants.FormattingEnabled = true;
             this.cbTask33AddElementVariants.Items.AddRange(new object[] {
             "В существующий список",
             "В новый список"});
-            this.cbTask33AddElementVariants.Location = new System.Drawing.Point(276, 68);
+            this.cbTask33AddElementVariants.Location = new System.Drawing.Point(441, 68);
             this.cbTask33AddElementVariants.Name = "cbTask33AddElementVariants";
             this.cbTask33AddElementVariants.Size = new System.Drawing.Size(138, 21);
             this.cbTask33AddElementVariants.TabIndex = 21;
@@ -681,7 +708,7 @@
             this.cbTask33DeleteVariants.Items.AddRange(new object[] {
             "Удалить элемент",
             "Удалить список"});
-            this.cbTask33DeleteVariants.Location = new System.Drawing.Point(276, 115);
+            this.cbTask33DeleteVariants.Location = new System.Drawing.Point(441, 115);
             this.cbTask33DeleteVariants.Name = "cbTask33DeleteVariants";
             this.cbTask33DeleteVariants.Size = new System.Drawing.Size(138, 21);
             this.cbTask33DeleteVariants.TabIndex = 20;
@@ -689,7 +716,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(610, 94);
+            this.label3.Location = new System.Drawing.Point(595, 144);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(87, 13);
             this.label3.TabIndex = 19;
@@ -697,7 +724,7 @@
             // 
             // nudTask33ListIndex
             // 
-            this.nudTask33ListIndex.Location = new System.Drawing.Point(703, 92);
+            this.nudTask33ListIndex.Location = new System.Drawing.Point(688, 142);
             this.nudTask33ListIndex.Maximum = new decimal(new int[] {
             100000000,
             0,
@@ -710,7 +737,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(424, 94);
+            this.label2.Location = new System.Drawing.Point(628, 117);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 13);
             this.label2.TabIndex = 17;
@@ -718,7 +745,7 @@
             // 
             // nudTask33Element
             // 
-            this.nudTask33Element.Location = new System.Drawing.Point(484, 92);
+            this.nudTask33Element.Location = new System.Drawing.Point(688, 115);
             this.nudTask33Element.Maximum = new decimal(new int[] {
             9999999,
             0,
@@ -740,7 +767,7 @@
             // 
             // btnTask33DeleteElement
             // 
-            this.btnTask33DeleteElement.Location = new System.Drawing.Point(182, 100);
+            this.btnTask33DeleteElement.Location = new System.Drawing.Point(347, 100);
             this.btnTask33DeleteElement.Name = "btnTask33DeleteElement";
             this.btnTask33DeleteElement.Size = new System.Drawing.Size(85, 48);
             this.btnTask33DeleteElement.TabIndex = 15;
@@ -750,7 +777,7 @@
             // 
             // btnTask33AddElement
             // 
-            this.btnTask33AddElement.Location = new System.Drawing.Point(182, 60);
+            this.btnTask33AddElement.Location = new System.Drawing.Point(347, 60);
             this.btnTask33AddElement.Name = "btnTask33AddElement";
             this.btnTask33AddElement.Size = new System.Drawing.Size(85, 34);
             this.btnTask33AddElement.TabIndex = 14;
@@ -760,7 +787,7 @@
             // 
             // nudTask33FindElement
             // 
-            this.nudTask33FindElement.Location = new System.Drawing.Point(273, 29);
+            this.nudTask33FindElement.Location = new System.Drawing.Point(438, 29);
             this.nudTask33FindElement.Maximum = new decimal(new int[] {
             9999999,
             0,
@@ -782,7 +809,7 @@
             // 
             // btnTask33FindElement
             // 
-            this.btnTask33FindElement.Location = new System.Drawing.Point(182, 20);
+            this.btnTask33FindElement.Location = new System.Drawing.Point(347, 20);
             this.btnTask33FindElement.Name = "btnTask33FindElement";
             this.btnTask33FindElement.Size = new System.Drawing.Size(85, 34);
             this.btnTask33FindElement.TabIndex = 12;
@@ -795,7 +822,7 @@
             this.lbTask33.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbTask33.Location = new System.Drawing.Point(8, 10);
             this.lbTask33.Name = "lbTask33";
-            this.lbTask33.Size = new System.Drawing.Size(168, 212);
+            this.lbTask33.Size = new System.Drawing.Size(325, 212);
             this.lbTask33.TabIndex = 10;
             this.lbTask33.Text = "Список списков:\r\n(пусто)";
             this.lbTask33.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -1062,6 +1089,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown nudTask5SortCountOfElements;
         private System.Windows.Forms.Button btnSortTask5CreateNewArray;
+        private System.Windows.Forms.ComboBox cbTask33SearchDirection;
+        private System.Windows.Forms.ComboBox cbTask33AddVariants;
     }
 }
 

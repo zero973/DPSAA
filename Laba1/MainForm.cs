@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Laba1
@@ -43,6 +39,8 @@ namespace Laba1
             cbTask33AddElementVariants.SelectedIndex = 0;
             cbTask33DeleteVariants.SelectedIndex = 0;
             cbSortTask5SortVariant.SelectedIndex = 0;
+            cbTask33SearchDirection.SelectedIndex = 0;
+            cbTask33AddVariants.SelectedIndex = 0;
 
             TreeTask4UpdateUI();
             Task5SortUpdateUI();
@@ -232,7 +230,7 @@ namespace Laba1
 
         private void btnTask24AddElement_Click(object sender, EventArgs e)
         {
-            var variant = (AddVariants)Enum.ToObject(typeof(AddVariants), cbTask24AddVariant.SelectedIndex);
+            var variant = (AddVariants)cbTask24AddVariant.SelectedIndex;
             if (!_Task24.AddElement((int)nudTask24Element.Value, variant))
                 ShowMessage("Нельзя добавить элемент - нет места или заданный элемент не найден.");
             Task24UpdateUI();
@@ -256,7 +254,7 @@ namespace Laba1
 
         private void btnTask33FindElement_Click(object sender, EventArgs e)
         {
-            int index = _Task33.FindElement((int)nudTask33FindElement.Value);
+            int index = _Task33.FindElement((int)nudTask33FindElement.Value, cbTask33SearchDirection.SelectedIndex == 0);
             if (index != -1)
                 ShowMessage($"Элемент находится в листе с индексом {index}.");
             else
@@ -265,14 +263,15 @@ namespace Laba1
 
         private void btnTask33AddElement_Click(object sender, EventArgs e)
         {
+            var variant = (AddVariants)cbTask33AddVariants.SelectedIndex;
             // добавить в существующий; иначе в новый лист
-            if(cbTask33AddElementVariants.SelectedIndex == 0)
+            if (cbTask33AddElementVariants.SelectedIndex == 0)
             {
-                if (!_Task33.AddElement((int)nudTask33Element.Value, false, (int)nudTask33ListIndex.Value))
+                if (!_Task33.AddElement((int)nudTask33Element.Value, false, (int)nudTask33ListIndex.Value, variant))
                     ShowMessage("Не найден список с заданным индексом.");
             }
             else
-                _Task33.AddElement((int)nudTask33Element.Value, true, 0);
+                _Task33.AddElement((int)nudTask33Element.Value, true, 0, variant);
             
             Task33UpdateUI();
         }
@@ -471,9 +470,9 @@ namespace Laba1
     public class Task2
     {
 
-        private List<int> mainItems;
+        private CustomList<int> mainItems;
 
-        private List<int> deletedItems;
+        private CustomList<int> deletedItems;
 
         private Random _Random;
 
@@ -481,8 +480,8 @@ namespace Laba1
 
         public Task2()
         {
-            mainItems = new List<int>();
-            deletedItems = new List<int>();
+            mainItems = new CustomList<int>();
+            deletedItems = new CustomList<int>();
             _Random = new Random();
             MaxItemsCount = 10;
         }
@@ -515,7 +514,7 @@ namespace Laba1
 
             if (putToDeleted)
                 for (int i = 0; i < count; i++)
-                    AddItemToDeletedStack(mainItems[GetItemsCount() - 1 - i]);
+                    AddItemToDeletedStack(mainItems.ElementAt(GetItemsCount() - 1 - i));
 
             for (int i = 0; i < count; i++)
                 mainItems.RemoveAt(mainItems.Count-1);
@@ -544,12 +543,12 @@ namespace Laba1
 
         public string PrintMainItems()
         {
-            return string.Join(Environment.NewLine, mainItems);
+            return mainItems.Print(Environment.NewLine);
         }
 
         public string PrintDeletedItems()
         {
-            return string.Join(Environment.NewLine, deletedItems);
+            return deletedItems.Print(Environment.NewLine);
         }
 
 
@@ -629,7 +628,7 @@ namespace Laba1
     public class Task6
     {
 
-        private List<int> mainItems;
+        private CustomList<int> mainItems;
 
         private Random _Random;
 
@@ -637,7 +636,7 @@ namespace Laba1
 
         public Task6()
         {
-            mainItems = new List<int>();
+            mainItems = new CustomList<int>();
             _Random = new Random();
             MaxItems = 10;
         }
@@ -674,7 +673,7 @@ namespace Laba1
 
         public string PrintElements()
         {
-            return string.Join(Environment.NewLine, mainItems);
+            return mainItems.Print(Environment.NewLine);
         }
 
     }
@@ -713,7 +712,10 @@ namespace Laba1
 
             int randomValue = _Random.Next(1000, 9999);
             int[] rightArrayPart;
-            CurIndex++;
+
+            if (mainItems.Contains(element) || variant == AddVariants.AfterAll)
+                CurIndex++;
+
             switch (variant)
             {
                 case AddVariants.BeforeElement:
@@ -737,6 +739,7 @@ namespace Laba1
                 case AddVariants.AfterElement:
                     if (!mainItems.Contains(element))
                         return false;
+
                     rightArrayPart = CutArray(mainItems, FindElement(element) + 1, mainItems.Length);
                     mainItems[FindElement(element) + 1] = randomValue;
                     for (int i = FindElement(element) + 2, j = 0; i < mainItems.Length; i++, j++)
@@ -782,7 +785,7 @@ namespace Laba1
     public class Task24
     {
 
-        private List<int> mainItems;
+        private CustomList<int> mainItems;
 
         private Random _Random;
 
@@ -790,7 +793,7 @@ namespace Laba1
 
         public Task24()
         {
-            mainItems = new List<int>();
+            mainItems = new CustomList<int>();
             _Random = new Random();
             MaxItems = 10;
         }
@@ -798,7 +801,7 @@ namespace Laba1
         public int FindElement(int value)
         {
             for (int i = 0; i < mainItems.Count; i++)
-                if (mainItems[i] == value)
+                if (mainItems.ElementAt(i) == value)
                     return i;
             return -1;
         }
@@ -845,7 +848,7 @@ namespace Laba1
 
         public string PrintElements()
         {
-            return string.Join(Environment.NewLine, mainItems) + $"{Environment.NewLine}({mainItems.Count}/{MaxItems})";
+            return mainItems.Print(Environment.NewLine) + $"{Environment.NewLine}({mainItems.Count}/{MaxItems})";
         }
 
     }
@@ -853,19 +856,32 @@ namespace Laba1
     public class Task33
     {
 
-        private List<List<int>> mainItems;
+        private CustomLinkedList<CustomLinkedList<int>> mainItems;
+        private Random _Random;
 
         public Task33()
         {
-            mainItems = new List<List<int>>();
+            _Random = new Random();
+            mainItems = new CustomLinkedList<CustomLinkedList<int>>();
         }
 
-        public int FindElement(int element)
+        public int FindElement(int element, bool IsForwardDirection)
         {
-            for (int i = 0; i < mainItems.Count; i++)
-                for (int j = 0; j < mainItems[i].Count; j++)
-                    if (mainItems[i][j] == element)
-                        return i;
+            if (IsForwardDirection)
+            {
+                for (int i = 0; i < mainItems.Count; i++)
+                    for (int j = 0; j < mainItems.ElementAt(i).Count; j++)
+                        if (mainItems.ElementAt(i).ElementAt(j) == element)
+                            return j;
+            }
+            else
+            {
+                for (int i = mainItems.Count-1; i > -1; i--)
+                    for (int j = mainItems.ElementAt(i).Count - 1; j > -1; j--)
+                        if (mainItems.ElementAt(i).ElementAt(j) == element)
+                            return j;
+            }
+            
             return -1;
         }
 
@@ -875,18 +891,39 @@ namespace Laba1
         /// <param name="element">Добавляемый элемент</param>
         /// <param name="isNew">Создаём новый список или используем существующий</param>
         /// <param name="listIndex">Индекс списка, в который будем добавлять элемент</param>
-        public bool AddElement(int element, bool isNew, int listIndex)
+        public bool AddElement(int element, bool isNew, int listIndex, AddVariants variant)
         {
+            int randomValue = _Random.Next(1000, 9999);
             if (!isNew)
             {
                 if (listIndex >= mainItems.Count)
                     return false;
 
-                mainItems[listIndex].Add(element);
-
-                return true;
+                int elIndex = FindElement(element, true);
+                var list = mainItems.ElementAt(listIndex);
+                switch (variant)
+                {
+                    case AddVariants.BeforeElement:
+                        if (!list.Contains(element))
+                            return false;
+                        list.Insert(elIndex, randomValue);
+                        break;
+                    case AddVariants.AfterElement:
+                        if (!list.Contains(element))
+                            return false;
+                        if (elIndex == list.Count - 1)
+                        {
+                            list.Add(randomValue);
+                            return true;
+                        }
+                        list.Insert(elIndex + 1, randomValue);
+                        break;
+                    case AddVariants.AfterAll: list.Add(randomValue); break;
+                }
             }
-            mainItems.Add(new List<int>() { element });
+            else
+                mainItems.Add(new CustomLinkedList<int>(randomValue));
+
             return true;
         }
 
@@ -895,10 +932,10 @@ namespace Laba1
             if (listIndex >= mainItems.Count)
                 return false;
 
-            if (!mainItems[listIndex].Any(x => x == element))
+            if (!mainItems.ElementAt(listIndex).Any(x => x == element))
                 return false;
 
-            mainItems[listIndex].Remove(element);
+            mainItems.ElementAt(listIndex).Remove(element);
 
             return true;
         }
@@ -919,7 +956,7 @@ namespace Laba1
             for (int i = 0; i < mainItems.Count; i++)
             {
                 sb.Append($"{i}. ");
-                sb.Append(string.Join(",", mainItems[i]));
+                sb.Append(mainItems.ElementAt(i).Print(", "));
                 sb.Append(Environment.NewLine);
             }
             return sb.ToString();
@@ -932,14 +969,14 @@ namespace Laba1
 
         private Random _Random;
 
-        private List<int> CachedElements;
+        private CustomList<int> CachedElements;
 
         private BinaryTree<int> _BinaryTree;
 
         public TreeTask4()
         {
             _Random = new Random();
-            CachedElements = new List<int>();
+            CachedElements = new CustomList<int>();
             _BinaryTree = new BinaryTree<int>(GetRandomElement(), null);
         }
 
@@ -1316,6 +1353,335 @@ namespace Laba1
         public string PrintSortedElements()
         {
             return string.Join(", ", sortedItems);
+        }
+
+    }
+
+    public class CustomList<T>
+    {
+
+        protected IElement<T> RootElement { get; set; }
+
+        public CustomList()
+        {
+
+        }
+
+        public CustomList(T value)
+        {
+            RootElement = new CustomListElement<T>(value);
+        }
+
+        public int Count
+        {
+            get
+            {
+                if (RootElement == null)
+                    return 0;
+                int count = 1;
+                var curElement = RootElement;
+                for (; curElement.NextItem != null; count++)
+                    curElement = curElement.NextItem;
+                return count;
+            }
+        }
+
+        public virtual void Add(T value)
+        {
+            if (RootElement == null)
+            {
+                RootElement = new CustomListElement<T>(value);
+                return;
+            }
+            var curElement = RootElement;
+            while (curElement.NextItem != null)
+                curElement = curElement.NextItem;
+
+            curElement.NextItem = new CustomListElement<T>(value, null);
+        }
+
+        public T ElementAt(int index)
+        {
+            if (index >= Count)
+                throw new IndexOutOfRangeException();
+            var element = RootElement;
+            for (int i = 0; i < index; i++)
+                element = element.NextItem;
+            return element.Value;
+        }
+
+        public virtual bool Remove(T value)
+        {
+            var curElement = RootElement;
+            var prevElement = RootElement;
+            bool isElementFound = false;
+            for (int i = 0; i < Count; i++)
+            {
+                if (curElement.Value.Equals(value))
+                {
+                    isElementFound = true;
+                    break;
+                }
+                prevElement = curElement;
+                curElement = curElement.NextItem;
+            }
+
+            if (curElement == RootElement)
+            {
+                if (RootElement.NextItem != null)
+                    RootElement = RootElement.NextItem;
+                else
+                    RootElement = null;
+            }
+            else
+            {
+                var nextElement = curElement.NextItem;
+                prevElement.NextItem = nextElement;
+            }
+
+            return isElementFound;
+        }
+
+        public virtual void RemoveAt(int index)
+        {
+            Remove(ElementAt(index));
+        }
+
+        public T First()
+        {
+            return RootElement.Value;
+        }
+
+        public T Last()
+        {
+            var result = RootElement;
+            while (result.NextItem != null)
+                result = result.NextItem;
+            return result.Value;
+        }
+
+        public bool Any()
+        {
+            return RootElement != null;
+        }
+
+        public virtual bool Any(Func<T, bool> predicate)
+        {
+            var element = RootElement;
+            for (int i = 0; i < Count; i++)
+            {
+                if (predicate(element.Value))
+                    return true;
+                element = element.NextItem;
+            }
+            return false;
+        }
+
+        public CustomList<T> Where(Func<T, bool> predicate)
+        {
+            var result = new CustomList<T>();
+            var element = RootElement;
+            for (int i = 0; i < Count; i++)
+            {
+                if (predicate(element.Value))
+                    result.Add(element.Value);
+                element = element.NextItem;
+            }
+            return result;
+        }
+
+        public bool Contains(T value)
+        {
+            return Any(x => x.Equals(value));
+        }
+
+        public virtual void Insert(int index, T value)
+        {
+            if (index >= Count)
+                throw new IndexOutOfRangeException();
+
+            if (index == 0)
+            {
+                var newItem = new CustomListElement<T>(value, RootElement);
+                RootElement = newItem;
+                return;
+            }
+
+            var curElement = RootElement;
+            for (int i = 0; i < index-1; i++)
+                curElement = curElement.NextItem;
+            curElement.NextItem = new CustomListElement<T>(value, curElement.NextItem);
+        }
+
+        public string Print(string delimeter)
+        {
+            if (RootElement == null)
+                return "";
+
+            StringBuilder result = new StringBuilder();
+            var curElement = RootElement;
+            while (curElement?.NextItem != null)
+            {
+                result.Append($"{curElement.Value}{delimeter}");
+                curElement = curElement.NextItem;
+            }
+            result.Append($"{curElement.Value}");
+
+            return result.ToString();
+        }
+
+    }
+
+    public class CustomLinkedList<T> : CustomList<T>
+    {
+
+        public CustomLinkedList()
+        {
+
+        }
+
+        public CustomLinkedList(T value)
+        {
+            RootElement = new CustomLinkedListElement<T>(value);
+        }
+
+        public override void Add(T value)
+        {
+            if (RootElement == null)
+            {
+                RootElement = new CustomListElement<T>(value);
+                return;
+            }
+            var curElement = RootElement;
+            while (curElement.NextItem != null)
+                curElement = curElement.NextItem;
+
+            curElement.NextItem = new CustomLinkedListElement<T>(value, null, curElement);
+        }
+
+        public override bool Remove(T value)
+        {
+            var element = new CustomLinkedListElement<T>(RootElement.Value, RootElement.NextItem, null);
+            bool isElementFound = false;
+            for (int i = 0; i < Count; i++)
+            {
+                if (element.Value.Equals(value))
+                {
+                    isElementFound = true;
+                    break;
+                }
+                element = (CustomLinkedListElement<T>)element.NextItem;
+            }
+
+            if (RootElement.NextItem != null)
+            {
+                if (!element.Equals(RootElement))
+                {
+                    var prevElement = element.PrevItem;
+                    var nextElement = (CustomLinkedListElement<T>)element.NextItem;
+                    prevElement.NextItem = nextElement;
+                    if (nextElement != null)
+                        nextElement.PrevItem = prevElement;
+                }
+                else
+                    RootElement = RootElement.NextItem;
+            }
+            else
+                RootElement = null;
+
+            return isElementFound;
+        }
+
+        public override void Insert(int index, T value)
+        {
+            if (index >= Count)
+                throw new IndexOutOfRangeException();
+
+            if (index == 0)
+            {
+                var newItem = new CustomLinkedListElement<T>(value, RootElement, null);
+                RootElement = newItem;
+                return;
+            }
+
+            var curElement = RootElement;
+            for (int i = 0; i < index - 1; i++)
+                curElement = curElement.NextItem;
+            curElement.NextItem = new CustomLinkedListElement<T>(value, curElement.NextItem, curElement);
+        }
+
+    }
+
+    public interface IElement<T>
+    {
+
+        T Value { get; set; }
+
+        IElement<T> NextItem { get; set; }
+
+    }
+
+    public class CustomListElement<T> : IElement<T>
+    {
+
+        public T Value { get; set; }
+
+        public IElement<T> NextItem { get; set; }
+
+        public CustomListElement(T value)
+        {
+            Value = value;
+        }
+
+        public CustomListElement(T value, IElement<T> nextItem)
+        {
+            Value = value;
+            NextItem = nextItem;
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var e = obj as IElement<T>;
+            return e?.Value.Equals(Value) ?? false;
+        }
+
+    }
+
+    public class CustomLinkedListElement<T> : IElement<T>
+    {
+
+        public T Value { get; set; }
+
+        public IElement<T> NextItem { get; set; }
+
+        public IElement<T> PrevItem { get; set; }
+
+        public CustomLinkedListElement(T value) 
+        {
+            Value = value;
+        }
+
+        public CustomLinkedListElement(T value, IElement<T> nextItem, IElement<T> prevItem)
+        {
+            Value = value;
+            NextItem = nextItem;
+            PrevItem = prevItem;
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var e = obj as IElement<T>;
+            return e?.Value.Equals(Value) ?? false;
         }
 
     }

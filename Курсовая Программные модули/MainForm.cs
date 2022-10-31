@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -14,16 +13,16 @@ namespace Курсовая_Программные_модули
     {
 
         private ArrayStek<SmallProgram> SmallProgramms;
-        private LinkedList<Module> Modules;
-        private LinkedList<MyProgram> MyPrograms;
+        private CustomLinkedList<Module> Modules;
+        private CustomLinkedList<MyProgram> MyPrograms;
 
         public MainForm()
         {
             InitializeComponent();
 
             SmallProgramms = new ArrayStek<SmallProgram>(10);
-            Modules = new LinkedList<Module>();
-            MyPrograms = new LinkedList<MyProgram>();
+            Modules = new CustomLinkedList<Module>();
+            MyPrograms = new CustomLinkedList<MyProgram>();
 
             MakeTestData();
             UpdateUI();
@@ -89,9 +88,10 @@ namespace Курсовая_Программные_модули
                 return;
             }
 
-            CheckModuleData(false);
+            if (!CheckModuleData(false))
+                return;
 
-            Modules.AddLast(new LinkedListNode<Module>(new Module(tbModuleName.Text, SmallProgramms)));
+            Modules.AddLast(new Module(tbModuleName.Text, SmallProgramms));
             SmallProgramms = new ArrayStek<SmallProgram>(10);
 
             UpdateUI();
@@ -178,8 +178,8 @@ namespace Курсовая_Программные_модули
             if (!CheckProgramData(false))
                 return;
 
-            MyPrograms.AddLast(new LinkedListNode<MyProgram>(new MyProgram(tbProgramName.Text, Modules)));
-            Modules = new LinkedList<Module>();
+            MyPrograms.AddLast(new MyProgram(tbProgramName.Text, Modules));
+            Modules = new CustomLinkedList<Module>();
 
             UpdateUI();
         }
@@ -198,7 +198,7 @@ namespace Курсовая_Программные_модули
             var program = MyPrograms.ElementAt((int)nudProgramId.Value);
             program.Name = tbProgramName.Text;
             program.Modules = Modules;
-            Modules = new LinkedList<Module>();
+            Modules = new CustomLinkedList<Module>();
 
             UpdateUI();
         }
@@ -254,7 +254,7 @@ namespace Курсовая_Программные_модули
                 return;
             }
 
-            MyPrograms = JsonConvert.DeserializeObject<LinkedList<MyProgram>>(File.ReadAllText(tbFilePath.Text));
+            MyPrograms = JsonConvert.DeserializeObject<CustomLinkedList<MyProgram>>(File.ReadAllText(tbFilePath.Text));
             UpdateUI();
             ShowMessage("Данные успешно загружены");
         }
@@ -273,11 +273,13 @@ namespace Курсовая_Программные_модули
 
         #endregion
 
+        #region Other
+
         private void UpdateUI()
         {
-            lbSmallPrograms.Text = $"Подпрограммы:{Environment.NewLine}{SmallProgramms.Print(Environment.NewLine)}";
-            lbModules.Text = $"Модули:{Environment.NewLine}{string.Join(Environment.NewLine, Modules)}";
-            lbMyPrograms.Text = $"Программы:{Environment.NewLine}{string.Join(Environment.NewLine, MyPrograms)}";
+            lbSmallPrograms.Text = $"Подпрограммы ({SmallProgramms.CountOfNotNullElements()}/10):{Environment.NewLine}{SmallProgramms.Print(Environment.NewLine)}";
+            lbModules.Text = $"Модули:{Environment.NewLine}{Modules.Print(Environment.NewLine)}";
+            lbMyPrograms.Text = $"Программы:{Environment.NewLine}{MyPrograms.Print(Environment.NewLine)}";
         }
 
         private bool ValidateField(TextBox field)
@@ -297,21 +299,24 @@ namespace Курсовая_Программные_модули
             SmallProgramms.Add(new SmallProgram("Подпрога1", 10));
             SmallProgramms.Add(new SmallProgram("Подпрога2", 21));
             SmallProgramms.Add(new SmallProgram("Подпрога3", 30));
-            Modules.AddLast(new LinkedListNode<Module>(new Module("Модуль1", SmallProgramms)));
+            Modules.AddLast(new Module("Модуль1", SmallProgramms));
             SmallProgramms = new ArrayStek<SmallProgram>(10);
             SmallProgramms.Add(new SmallProgram("Подпрога4", 13));
             SmallProgramms.Add(new SmallProgram("Подпрога5", 25));
             SmallProgramms.Add(new SmallProgram("Подпрога6", 36));
-            Modules.AddLast(new LinkedListNode<Module>(new Module("Модуль2", SmallProgramms)));
+            Modules.AddLast(new Module("Модуль2", SmallProgramms));
             SmallProgramms = new ArrayStek<SmallProgram>(10);
             SmallProgramms.Add(new SmallProgram("Подпрога7", 21));
             SmallProgramms.Add(new SmallProgram("Подпрога8", 45));
             SmallProgramms.Add(new SmallProgram("Подпрога9", 64));
-            Modules.AddLast(new LinkedListNode<Module>(new Module("Модуль3", SmallProgramms)));
+            Modules.AddLast(new Module("Модуль3", SmallProgramms));
             SmallProgramms = new ArrayStek<SmallProgram>(10);
-            MyPrograms.AddFirst(new LinkedListNode<MyProgram>(new MyProgram("Программа1", Modules)));
-            Modules = new LinkedList<Module>();
+            MyPrograms.AddFirst(new MyProgram("Программа1", Modules));
+            Modules = new CustomLinkedList<Module>();
         }
+
+        #endregion
+
     }
 
     public class SmallProgram
@@ -335,6 +340,8 @@ namespace Курсовая_Программные_модули
 
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
             var other = obj as SmallProgram;
             return Name.Equals(other.Name);
         }
@@ -372,9 +379,9 @@ namespace Курсовая_Программные_модули
 
         public string Name { get; set; }
 
-        public LinkedList<Module> Modules { get; set; }
+        public CustomLinkedList<Module> Modules { get; set; }
 
-        public MyProgram(string name, LinkedList<Module> modules)
+        public MyProgram(string name, CustomLinkedList<Module> modules)
         {
             Name = name;
             Modules = modules;
@@ -388,7 +395,7 @@ namespace Курсовая_Программные_модули
 
         public override string ToString()
         {
-            return $"{Name}: ({string.Join(". ", Modules)})";
+            return $"{Name}: ({Modules.Print(". ")})";
         }
 
     }
@@ -423,7 +430,7 @@ namespace Курсовая_Программные_модули
 
         public bool Add(T item)
         {
-            if (CurIndex == Items.Length-1 || Items.Contains(item))
+            if (CurIndex == Items.Length-1 || Contains(item))
                 return false;
 
             CurIndex++;
@@ -445,7 +452,213 @@ namespace Курсовая_Программные_модули
 
         public string Print(string delimeter)
         {
-            return string.Join(delimeter, Items.Where(x => x != null));
+            return string.Join(delimeter, GetNotNullItems());
+        }
+
+        public int CountOfNotNullElements()
+        {
+            int countOfNotNullItems = 0;
+            for (int i = 0; i < Items.Length; i++)
+                if (!Items[i]?.Equals(default(T)) ?? false)
+                    countOfNotNullItems++;
+
+            return countOfNotNullItems;
+        }
+
+        private bool Contains(T item)
+        {
+            foreach(var e in Items)
+                if(e?.Equals(item) ?? false)
+                    return true;
+            return false;
+        }
+
+        private T[] GetNotNullItems()
+        {
+            int index = 0;
+            T[] result = new T[CountOfNotNullElements()];
+            for (int i = 0; i < Items.Length; i++)
+            {
+                if (!Items[i]?.Equals(default(T)) ?? false)
+                {
+                    result[index] = Items[i];
+                    index++;
+                }
+            }
+
+            return result;
+        }
+
+    }
+
+    public class CustomLinkedList<T>
+    {
+
+        [JsonProperty]
+        private CustomListElement<T> RootElement { get; set; }
+
+        public CustomLinkedList()
+        {
+
+        }
+
+        public int Count
+        {
+            get
+            {
+                if (RootElement == null)
+                    return 0;
+                int count = 1;
+                var curElement = RootElement;
+                for (; curElement.NextItem != null; count++)
+                    curElement = curElement.NextItem;
+                return count;
+            }
+        }
+
+        public void AddLast(T value)
+        {
+            if (RootElement == null)
+            {
+                RootElement = new CustomListElement<T>(value);
+                return;
+            }
+            var curElement = RootElement;
+            while (curElement.NextItem != null)
+                curElement = curElement.NextItem;
+
+            curElement.NextItem = new CustomListElement<T>(value, null, curElement);
+        }
+
+        public void AddFirst(T value)
+        {
+            var t = RootElement;
+            RootElement = new CustomListElement<T>(value, t, null);
+        }
+
+        public T ElementAt(int index)
+        {
+            if (index >= Count)
+                throw new IndexOutOfRangeException();
+            var element = RootElement;
+            for (int i = 0; i < index; i++)
+                element = element.NextItem;
+            return element.Value;
+        }
+
+        public bool Remove(T value)
+        {
+            var element = RootElement;
+            bool isElementFound = false;
+            for (int i = 0; i < Count; i++)
+            {
+                if (element.Value.Equals(value))
+                {
+                    isElementFound = true;
+                    break;
+                }
+                element = element.NextItem;
+            }
+
+            if (RootElement.NextItem != null)
+            {
+                if (element.PrevItem == null)
+                {
+                    RootElement = RootElement.NextItem;
+                    RootElement.PrevItem = null;
+                    return isElementFound;
+                }
+                var prevElement = element.PrevItem;
+                var nextElement = element.NextItem;
+                prevElement.NextItem = nextElement;
+                if (nextElement != null)
+                    nextElement.PrevItem = prevElement;
+            }
+            else
+                RootElement = null;
+
+            return isElementFound;
+        }
+
+        public T First()
+        {
+            return RootElement.Value;
+        }
+
+        public bool Any()
+        {
+            return RootElement != null;
+        }
+
+        public bool Any(Func<T, bool> predicate)
+        {
+            var element = RootElement;
+            for (int i = 0; i < Count; i++)
+            {
+                if (predicate(element.Value))
+                    return true;
+                element = element.NextItem;
+            }
+            return false;
+        }
+
+        public CustomLinkedList<T> Where(Func<T, bool> predicate)
+        {
+            var result = new CustomLinkedList<T>();
+            var element = RootElement;
+            for (int i = 0; i < Count; i++)
+            {
+                if (predicate(element.Value))
+                    result.AddLast(element.Value);
+                element = element.NextItem;
+            }
+            return result;
+        }
+
+        public string Print(string delimeter)
+        {
+            if (RootElement == null)
+                return "";
+
+            StringBuilder result = new StringBuilder();
+            var curElement = RootElement;
+            while (curElement?.NextItem != null)
+            {
+                result.Append($"{curElement.Value}{delimeter}");
+                curElement = curElement.NextItem;
+            }
+            result.Append($"{curElement.Value}");
+
+            return result.ToString();
+        }
+
+    }
+
+    public class CustomListElement<T>
+    {
+
+        public T Value { get; set; }
+
+        public CustomListElement<T> NextItem { get; set; }
+
+        [JsonIgnore]
+        public CustomListElement<T> PrevItem { get; set; }
+
+        public CustomListElement()
+        {
+            
+        }
+
+        public CustomListElement(T value)
+        {
+            Value = value;
+        }
+
+        public CustomListElement(T value, CustomListElement<T> nextItem, CustomListElement<T> prevItem)
+        {
+            Value = value;
+            NextItem = nextItem;
+            PrevItem = prevItem;
         }
 
     }
