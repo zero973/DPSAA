@@ -86,6 +86,8 @@
             this.btnTask33FindElement = new System.Windows.Forms.Button();
             this.lbTask33 = new System.Windows.Forms.Label();
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cbTreeTask4PrintVariants = new System.Windows.Forms.ComboBox();
             this.tbTreeTask4 = new System.Windows.Forms.TextBox();
             this.btnTreeTask4DeleteElement = new System.Windows.Forms.Button();
             this.nudTreeTask4Element = new System.Windows.Forms.NumericUpDown();
@@ -829,6 +831,8 @@
             // 
             // tabPage8
             // 
+            this.tabPage8.Controls.Add(this.label4);
+            this.tabPage8.Controls.Add(this.cbTreeTask4PrintVariants);
             this.tabPage8.Controls.Add(this.tbTreeTask4);
             this.tabPage8.Controls.Add(this.btnTreeTask4DeleteElement);
             this.tabPage8.Controls.Add(this.nudTreeTask4Element);
@@ -840,6 +844,28 @@
             this.tabPage8.Text = "Дерево";
             this.tabPage8.UseVisualStyleBackColor = true;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(626, 12);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(101, 13);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Варианты вывода:";
+            // 
+            // cbTreeTask4PrintVariants
+            // 
+            this.cbTreeTask4PrintVariants.FormattingEnabled = true;
+            this.cbTreeTask4PrintVariants.Items.AddRange(new object[] {
+            "Прямой порядок",
+            "Симметричный порядок",
+            "Обратно-симметричный порядок"});
+            this.cbTreeTask4PrintVariants.Location = new System.Drawing.Point(733, 9);
+            this.cbTreeTask4PrintVariants.Name = "cbTreeTask4PrintVariants";
+            this.cbTreeTask4PrintVariants.Size = new System.Drawing.Size(159, 21);
+            this.cbTreeTask4PrintVariants.TabIndex = 17;
+            this.cbTreeTask4PrintVariants.SelectedIndexChanged += new System.EventHandler(this.cbTreeTask4PrintVariants_SelectedIndexChanged);
+            // 
             // tbTreeTask4
             // 
             this.tbTreeTask4.Location = new System.Drawing.Point(6, 7);
@@ -847,13 +873,13 @@
             this.tbTreeTask4.Name = "tbTreeTask4";
             this.tbTreeTask4.ReadOnly = true;
             this.tbTreeTask4.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbTreeTask4.Size = new System.Drawing.Size(890, 63);
+            this.tbTreeTask4.Size = new System.Drawing.Size(614, 218);
             this.tbTreeTask4.TabIndex = 16;
             this.tbTreeTask4.Text = "Дерево:\r\n(пусто)\r\n";
             // 
             // btnTreeTask4DeleteElement
             // 
-            this.btnTreeTask4DeleteElement.Location = new System.Drawing.Point(8, 133);
+            this.btnTreeTask4DeleteElement.Location = new System.Drawing.Point(626, 66);
             this.btnTreeTask4DeleteElement.Name = "btnTreeTask4DeleteElement";
             this.btnTreeTask4DeleteElement.Size = new System.Drawing.Size(130, 23);
             this.btnTreeTask4DeleteElement.TabIndex = 15;
@@ -863,7 +889,7 @@
             // 
             // nudTreeTask4Element
             // 
-            this.nudTreeTask4Element.Location = new System.Drawing.Point(144, 136);
+            this.nudTreeTask4Element.Location = new System.Drawing.Point(762, 69);
             this.nudTreeTask4Element.Maximum = new decimal(new int[] {
             9999999,
             0,
@@ -885,7 +911,7 @@
             // 
             // btnTreeTask4AddElement
             // 
-            this.btnTreeTask4AddElement.Location = new System.Drawing.Point(8, 104);
+            this.btnTreeTask4AddElement.Location = new System.Drawing.Point(626, 37);
             this.btnTreeTask4AddElement.Name = "btnTreeTask4AddElement";
             this.btnTreeTask4AddElement.Size = new System.Drawing.Size(130, 23);
             this.btnTreeTask4AddElement.TabIndex = 12;
@@ -1091,6 +1117,8 @@
         private System.Windows.Forms.Button btnSortTask5CreateNewArray;
         private System.Windows.Forms.ComboBox cbTask33SearchDirection;
         private System.Windows.Forms.ComboBox cbTask33AddVariants;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cbTreeTask4PrintVariants;
     }
 }
 

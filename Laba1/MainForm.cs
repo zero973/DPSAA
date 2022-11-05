@@ -41,6 +41,7 @@ namespace Laba1
             cbSortTask5SortVariant.SelectedIndex = 0;
             cbTask33SearchDirection.SelectedIndex = 0;
             cbTask33AddVariants.SelectedIndex = 0;
+            cbTreeTask4PrintVariants.SelectedIndex = 0;
 
             TreeTask4UpdateUI();
             Task5SortUpdateUI();
@@ -315,9 +316,16 @@ namespace Laba1
             TreeTask4UpdateUI();
         }
 
+        private void cbTreeTask4PrintVariants_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var variant = (TreePrintVariants)cbTreeTask4PrintVariants.SelectedIndex;
+            tbTreeTask4.Text = $"Дерево:{NL}{_TreeTask4.PrintElements(variant)}";
+        }
+
         private void TreeTask4UpdateUI()
         {
-            tbTreeTask4.Text = $"Дерево:{NL}{_TreeTask4.PrintElements()}";
+            var variant = (TreePrintVariants)cbTreeTask4PrintVariants.SelectedIndex;
+            tbTreeTask4.Text = $"Дерево:{NL}{_TreeTask4.PrintElements(variant)}";
         }
 
         #endregion
@@ -969,30 +977,34 @@ namespace Laba1
 
         private Random _Random;
 
-        private CustomList<int> CachedElements;
-
-        private BinaryTree<int> _BinaryTree;
+        private BinaryTree<int> Tree;
 
         public TreeTask4()
         {
             _Random = new Random();
-            CachedElements = new CustomList<int>();
-            _BinaryTree = new BinaryTree<int>(GetRandomElement(), null);
+            Tree = new BinaryTree<int>(5000);
         }
 
         public void AddElement()
         {
-            _BinaryTree.add(GetRandomElement());
+            //Tree.Add(GetRandomElement());
+            Tree.Add(6000);
+            Tree.Add(5500);
+            Tree.Add(7000);
+            Tree.Add(4000);
+            Tree.Add(3000);
+            Tree.Add(3500);
+            Tree.Add(2000);
         }
 
         public bool DeleteElement(int value)
         {
-            return _BinaryTree.remove(value);
+            return Tree.Remove(value);
         }
 
-        public string PrintElements()
+        public string PrintElements(TreePrintVariants variant)
         {
-            return _BinaryTree.print();
+            return Tree.Print(variant);
         }
 
         private int GetRandomElement()
@@ -1001,212 +1013,8 @@ namespace Laba1
             do
             {
                 result = _Random.Next(1000, 9999);
-            } while (CachedElements.Contains(result));
-            CachedElements.Add(result);
+            } while (Tree.Contains(result));
             return result;
-        }
-
-        public class BinaryTree<T> where T : IComparable<T>
-        {
-            private BinaryTree<T> parent, left, right;
-            private T val;
-
-            public BinaryTree(T val, BinaryTree<T> parent)
-            {
-                this.val = val;
-                this.parent = parent;
-            }
-
-            public void add(T val)
-            {
-                if (val.CompareTo(this.val) < 0)
-                {
-                    if (this.left == null)
-                    {
-                        this.left = new BinaryTree<T>(val, this);
-                    }
-                    else if (this.left != null)
-                        this.left.add(val);
-                }
-                else
-                {
-                    if (this.right == null)
-                    {
-                        this.right = new BinaryTree<T>(val, this);
-                    }
-                    else if (this.right != null)
-                        this.right.add(val);
-                }
-            }
-
-            private BinaryTree<T> _search(BinaryTree<T> tree, T val)
-            {
-                if (tree == null) return null;
-                switch (val.CompareTo(tree.val))
-                {
-                    case 1: return _search(tree.right, val);
-                    case -1: return _search(tree.left, val);
-                    case 0: return tree;
-                    default: return null;
-                }
-            }
-
-            public BinaryTree<T> search(T val)
-            {
-                return _search(this, val);
-            }
-
-            public bool remove(T val)
-            {
-                //Проверяем, существует ли данный узел
-                BinaryTree<T> tree = search(val);
-                if (tree == null)
-                {
-                    //Если узла не существует, вернем false
-                    return false;
-                }
-                BinaryTree<T> curTree;
-
-                //Если удаляем корень
-                if (tree == this)
-                {
-                    if (tree.right != null)
-                    {
-                        curTree = tree.right;
-                    }
-                    else curTree = tree.left;
-
-                    while (curTree.left != null)
-                    {
-                        curTree = curTree.left;
-                    }
-                    T temp = curTree.val;
-                    this.remove(temp);
-                    tree.val = temp;
-
-                    return true;
-                }
-
-                //Удаление листьев
-                if (tree.left == null && tree.right == null && tree.parent != null)
-                {
-                    if (tree == tree.parent.left)
-                        tree.parent.left = null;
-                    else
-                    {
-                        tree.parent.right = null;
-                    }
-                    return true;
-                }
-
-                //Удаление узла, имеющего левое поддерево, но не имеющее правого поддерева
-                if (tree.left != null && tree.right == null)
-                {
-                    //Меняем родителя
-                    tree.left.parent = tree.parent;
-                    if (tree == tree.parent.left)
-                    {
-                        tree.parent.left = tree.left;
-                    }
-                    else if (tree == tree.parent.right)
-                    {
-                        tree.parent.right = tree.left;
-                    }
-                    return true;
-                }
-
-                //Удаление узла, имеющего правое поддерево, но не имеющее левого поддерева
-                if (tree.left == null && tree.right != null)
-                {
-                    //Меняем родителя
-                    tree.right.parent = tree.parent;
-                    if (tree == tree.parent.left)
-                    {
-                        tree.parent.left = tree.right;
-                    }
-                    else if (tree == tree.parent.right)
-                    {
-                        tree.parent.right = tree.right;
-                    }
-                    return true;
-                }
-
-                //Удаляем узел, имеющий поддеревья с обеих сторон
-                if (tree.right != null && tree.left != null)
-                {
-                    curTree = tree.right;
-
-                    while (curTree.left != null)
-                    {
-                        curTree = curTree.left;
-                    }
-
-                    //Если самый левый элемент является первым потомком
-                    if (curTree.parent == tree)
-                    {
-                        curTree.left = tree.left;
-                        tree.left.parent = curTree;
-                        curTree.parent = tree.parent;
-                        if (tree == tree.parent.left)
-                        {
-                            tree.parent.left = curTree;
-                        }
-                        else if (tree == tree.parent.right)
-                        {
-                            tree.parent.right = curTree;
-                        }
-                        return true;
-                    }
-                    //Если самый левый элемент НЕ является первым потомком
-                    else
-                    {
-                        if (curTree.right != null)
-                        {
-                            curTree.right.parent = curTree.parent;
-                        }
-                        curTree.parent.left = curTree.right;
-                        curTree.right = tree.right;
-                        curTree.left = tree.left;
-                        tree.left.parent = curTree;
-                        tree.right.parent = curTree;
-                        curTree.parent = tree.parent;
-                        if (tree == tree.parent.left)
-                        {
-                            tree.parent.left = curTree;
-                        }
-                        else if (tree == tree.parent.right)
-                        {
-                            tree.parent.right = curTree;
-                        }
-
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            private void _print(BinaryTree<T> node, bool isRight, StringBuilder sb)
-            {
-                if (node == null) return;
-                _print(node.left, false, sb);
-                string s = isRight ? "R:" : "L:";
-                Console.Write($"{s}{node} ");
-                sb.Append($"{s}{node} ");
-                if (node.right != null)
-                    _print(node.right, true, sb);
-            }
-
-            public string print()
-            {
-                StringBuilder sb = new StringBuilder();
-                _print(this, false, sb);
-                return sb.ToString();
-            }
-
-            public override string ToString()
-            {
-                return val.ToString();
-            }
         }
 
     }
@@ -1686,11 +1494,245 @@ namespace Laba1
 
     }
 
+    public class BinaryTree<T> where T : IComparable<T>
+    {
+
+        private TreeElement<T> RootElement;
+
+        public BinaryTree(T value)
+        {
+            RootElement = new TreeElement<T>(value);
+        }
+
+        public void Add(T element)
+        {
+            if (Contains(element))
+                return;
+
+            var currentElement = RootElement;
+            while (true)
+            {
+                if (element.CompareTo(currentElement.Value) < 0)
+                {
+                    if (currentElement.Left == null)
+                    {
+                        currentElement.Left = new TreeElement<T>(element, currentElement);
+                        break;
+                    }
+                    else
+                        currentElement = currentElement.Left;
+                }
+                else
+                {
+                    if (currentElement.Right == null)
+                    {
+                        currentElement.Right = new TreeElement<T>(element, currentElement);
+                        break;
+                    }
+                    else
+                        currentElement = currentElement.Right;
+                }
+            }
+        }
+
+        public bool Remove(T element)
+        {
+            if (!Contains(element) || RootElement == null)
+                return false;
+
+            var side = Sides.Left; // указывает на то, с какой стороны мы находимя относительно родителя
+            var currentElement = RootElement;
+            while (element.CompareTo(currentElement.Value) != 0)
+            {
+                if (element.CompareTo(currentElement.Value) < 0)
+                {
+                    currentElement = currentElement.Left;
+                    side = Sides.Left;
+                }
+                else
+                {
+                    currentElement = currentElement.Right;
+                    side = Sides.Right;
+                }
+            }
+
+            if (currentElement.IsHaveChilds)
+            {
+                if (currentElement.Left != null)
+                {
+                    var rightElement = currentElement.Left;
+
+                    if (rightElement.Right != null)
+                    {
+                        while (rightElement.Right != null)
+                            rightElement = rightElement.Right;
+
+                        currentElement.Value = rightElement.Value;
+                        rightElement.Parent.Right = rightElement.Left;
+                    }
+                    else
+                    {
+                        currentElement.Value = currentElement.Left.Value;
+                        currentElement.Left = currentElement.Left.Left;
+                    }
+                }
+                else
+                    currentElement.Parent.Left = currentElement.Right;
+            }
+            else
+            {
+                // проверка на корневой элемент
+                if (currentElement.Parent != null)
+                {
+                    if (side == Sides.Right)
+                        currentElement.Parent.Right = null;
+                    else
+                        currentElement.Parent.Left = null;
+                }
+                else
+                    RootElement = null;
+            }
+
+            return true;
+        }
+
+        public bool Contains(T element)
+        {
+            var currentElement = RootElement;
+            int compareResult = -1;
+            while (compareResult != 0)
+            {
+                compareResult = element.CompareTo(currentElement.Value);
+
+                if (compareResult < 0)
+                    currentElement = currentElement.Left;
+                else if (compareResult > 0)
+                    currentElement = currentElement.Right;
+
+                if (currentElement == null) 
+                    return false;
+            }
+            return true;
+        }
+
+        public string Print(TreePrintVariants variant)
+        {
+            StringBuilder result = new StringBuilder();
+            switch (variant)
+            {
+                case TreePrintVariants.Direct: result.Append(DirectPrint()); break;
+                case TreePrintVariants.Symmetrial: result.Append(SymmetrialPrint()); break;
+                case TreePrintVariants.RevertSymmetrial: result.Append(RevertSymmetrialPrint()); break;
+            }
+            return result.ToString();
+        }
+
+        private string DirectPrint()
+        {
+            string Print(TreeElement<T> element, int padding, string letter)
+            {
+                padding += 11;
+                string r = $"{Environment.NewLine}{(letter+element.Value).PadLeft(padding)}";
+                if (element.Left != null)
+                    r += Print(element.Left, padding, "L:");
+                if (element.Right != null)
+                    r += Print(element.Right, padding, "R:");
+                return r;
+            }
+            StringBuilder result = new StringBuilder();
+
+            result.Append(Print(RootElement, 0, "S:"));
+
+            return result.ToString();
+        }
+
+        private string SymmetrialPrint()
+        {
+            string Print(TreeElement<T> element, int padding, bool isRight = false)
+            {
+                padding += 8;
+                string topPadding = Environment.NewLine;
+                string bottomPadding = !isRight ? Environment.NewLine : "";
+                string r = $"{bottomPadding}{element.Value.ToString().PadLeft(padding)}{topPadding}";
+                if (element.Right != null)
+                    r = r.Insert(0, Print(element.Right, padding, true)); 
+                if (element.Left != null)
+                    r += Print(element.Left, padding);
+                return r;
+            }
+            StringBuilder result = new StringBuilder();
+
+            result.Append(Print(RootElement, 0));
+
+            return result.ToString();
+        }
+
+        private string RevertSymmetrialPrint()
+        {
+            string Print(TreeElement<T> element, int padding, bool isLeft = false)
+            {
+                padding += 8;
+                string topPadding = Environment.NewLine;
+                string bottomPadding = !isLeft ? Environment.NewLine : "";
+                string r = $"{bottomPadding}{element.Value.ToString().PadLeft(padding)}{topPadding}";
+                if (element.Left != null)
+                    r = r.Insert(0, Print(element.Left, padding, true));
+                if (element.Right != null)
+                    r += Print(element.Right, padding);
+                return r;
+            }
+            StringBuilder result = new StringBuilder();
+
+            result.Append(Print(RootElement, 0));
+
+            return result.ToString();
+        }
+
+    }
+
+    public class TreeElement<T> where T : IComparable<T>
+    {
+
+        public T Value { get; set; }
+
+        public TreeElement<T> Parent { get; set; }
+
+        public TreeElement<T> Left { get; set; }
+
+        public TreeElement<T> Right { get; set; }
+
+        public bool IsHaveChilds { get { return Left != null || Right != null; } }
+
+        public TreeElement(T value, TreeElement<T> parent = null)
+        {
+            Value = value;
+            Parent = parent;
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
+    }
+
     public enum AddVariants
     {
 
         BeforeElement = 0, AfterElement = 1, AfterAll = 2
 
+    }
+
+    public enum TreePrintVariants
+    {
+
+        Direct = 0, Symmetrial = 1, RevertSymmetrial = 2
+
+    }
+
+    public enum Sides
+    {
+        Left = 0, Right = 1
     }
 
 }
