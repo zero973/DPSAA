@@ -987,14 +987,7 @@ namespace Laba1
 
         public void AddElement()
         {
-            //Tree.Add(GetRandomElement());
-            Tree.Add(6000);
-            Tree.Add(5500);
-            Tree.Add(7000);
-            Tree.Add(4000);
-            Tree.Add(3000);
-            Tree.Add(3500);
-            Tree.Add(2000);
+            Tree.Add(GetRandomElement());
         }
 
         public bool DeleteElement(int value)
