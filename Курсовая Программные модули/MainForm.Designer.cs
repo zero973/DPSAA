@@ -50,7 +50,7 @@
             this.btnProgramLoad = new System.Windows.Forms.Button();
             this.btnProgramDelete = new System.Windows.Forms.Button();
             this.btnProgramAdd = new System.Windows.Forms.Button();
-            this.nudProgramId = new System.Windows.Forms.NumericUpDown();
+            this.nudSmallProgramsId = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.tbProgramName = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -61,15 +61,16 @@
             this.label5 = new System.Windows.Forms.Label();
             this.btnImportData = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.btnEditSmallProg = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudSmallProgramRowsCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudModuleId)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudProgramId)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSmallProgramsId)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSmallProgrammsClear
             // 
-            this.btnSmallProgrammsClear.Location = new System.Drawing.Point(368, 119);
+            this.btnSmallProgrammsClear.Location = new System.Drawing.Point(206, 148);
             this.btnSmallProgrammsClear.Name = "btnSmallProgrammsClear";
             this.btnSmallProgrammsClear.Size = new System.Drawing.Size(75, 23);
             this.btnSmallProgrammsClear.TabIndex = 42;
@@ -99,7 +100,7 @@
             // 
             // btnSmallProgramDelete
             // 
-            this.btnSmallProgramDelete.Location = new System.Drawing.Point(287, 119);
+            this.btnSmallProgramDelete.Location = new System.Drawing.Point(366, 119);
             this.btnSmallProgramDelete.Name = "btnSmallProgramDelete";
             this.btnSmallProgramDelete.Size = new System.Drawing.Size(75, 23);
             this.btnSmallProgramDelete.TabIndex = 39;
@@ -119,7 +120,7 @@
             // 
             // nudSmallProgramRowsCount
             // 
-            this.nudSmallProgramRowsCount.Location = new System.Drawing.Point(285, 46);
+            this.nudSmallProgramRowsCount.Location = new System.Drawing.Point(285, 68);
             this.nudSmallProgramRowsCount.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -142,7 +143,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(203, 48);
+            this.label2.Location = new System.Drawing.Point(203, 70);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 36;
@@ -150,15 +151,15 @@
             // 
             // tbSmallProgramName
             // 
-            this.tbSmallProgramName.Location = new System.Drawing.Point(269, 18);
+            this.tbSmallProgramName.Location = new System.Drawing.Point(287, 40);
             this.tbSmallProgramName.Name = "tbSmallProgramName";
-            this.tbSmallProgramName.Size = new System.Drawing.Size(162, 20);
+            this.tbSmallProgramName.Size = new System.Drawing.Size(144, 20);
             this.tbSmallProgramName.TabIndex = 35;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(203, 21);
+            this.label1.Location = new System.Drawing.Point(203, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 13);
             this.label1.TabIndex = 34;
@@ -291,22 +292,22 @@
             this.btnProgramAdd.UseVisualStyleBackColor = true;
             this.btnProgramAdd.Click += new System.EventHandler(this.btnProgramAdd_Click);
             // 
-            // nudProgramId
+            // nudSmallProgramsId
             // 
-            this.nudProgramId.Location = new System.Drawing.Point(450, 275);
-            this.nudProgramId.Maximum = new decimal(new int[] {
+            this.nudSmallProgramsId.Location = new System.Drawing.Point(287, 14);
+            this.nudSmallProgramsId.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
-            this.nudProgramId.Name = "nudProgramId";
-            this.nudProgramId.Size = new System.Drawing.Size(145, 20);
-            this.nudProgramId.TabIndex = 51;
+            this.nudSmallProgramsId.Name = "nudSmallProgramsId";
+            this.nudSmallProgramsId.Size = new System.Drawing.Size(145, 20);
+            this.nudSmallProgramsId.TabIndex = 51;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(368, 277);
+            this.label6.Location = new System.Drawing.Point(205, 16);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(81, 13);
             this.label6.TabIndex = 50;
@@ -314,7 +315,7 @@
             // 
             // tbProgramName
             // 
-            this.tbProgramName.Location = new System.Drawing.Point(434, 304);
+            this.tbProgramName.Location = new System.Drawing.Point(434, 278);
             this.tbProgramName.Name = "tbProgramName";
             this.tbProgramName.Size = new System.Drawing.Size(162, 20);
             this.tbProgramName.TabIndex = 49;
@@ -322,7 +323,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(368, 307);
+            this.label7.Location = new System.Drawing.Point(368, 281);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(60, 13);
             this.label7.TabIndex = 48;
@@ -393,13 +394,24 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // btnEditSmallProg
+            // 
+            this.btnEditSmallProg.Location = new System.Drawing.Point(285, 119);
+            this.btnEditSmallProg.Name = "btnEditSmallProg";
+            this.btnEditSmallProg.Size = new System.Drawing.Size(75, 23);
+            this.btnEditSmallProg.TabIndex = 53;
+            this.btnEditSmallProg.Text = "Изменить";
+            this.btnEditSmallProg.UseVisualStyleBackColor = true;
+            this.btnEditSmallProg.Click += new System.EventHandler(this.btnEditSmallProg_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(897, 573);
+            this.Controls.Add(this.btnEditSmallProg);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.nudProgramId);
+            this.Controls.Add(this.nudSmallProgramsId);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.tbProgramName);
             this.Controls.Add(this.label7);
@@ -430,7 +442,7 @@
             this.Text = "Программные модули";
             ((System.ComponentModel.ISupportInitialize)(this.nudSmallProgramRowsCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudModuleId)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudProgramId)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSmallProgramsId)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -462,7 +474,7 @@
         private System.Windows.Forms.Button btnProgramLoad;
         private System.Windows.Forms.Button btnProgramDelete;
         private System.Windows.Forms.Button btnProgramAdd;
-        private System.Windows.Forms.NumericUpDown nudProgramId;
+        private System.Windows.Forms.NumericUpDown nudSmallProgramsId;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbProgramName;
         private System.Windows.Forms.Label label7;
@@ -473,6 +485,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnImportData;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button btnEditSmallProg;
     }
 }
 

@@ -305,14 +305,13 @@ namespace Laba1
 
         private void btnTreeTask4AddElement_Click(object sender, EventArgs e)
         {
-            _TreeTask4.AddElement();
+            _TreeTask4.AddElements((int)nudTreeCountOfAddingElements.Value);
             TreeTask4UpdateUI();
         }
 
         private void btnTreeTask4DeleteElement_Click(object sender, EventArgs e)
         {
-            if(!_TreeTask4.DeleteElement((int)nudTreeTask4Element.Value))
-                ShowMessage("Не найден заданный элемент.");
+            _TreeTask4.DeleteElement((int)nudTreeTask4Element.Value);
             TreeTask4UpdateUI();
         }
 
@@ -982,32 +981,39 @@ namespace Laba1
         public TreeTask4()
         {
             _Random = new Random();
-            Tree = new BinaryTree<int>(5000);
+            Tree = new BinaryTree<int>();
         }
 
-        public void AddElement()
+        private int[] cachedElements;
+        public void AddElements(int count)
         {
-            Tree.Add(GetRandomElement());
+            count--;
+            var values = new CustomLinkedList<int>();
+            cachedElements = new int[count];
+            for (int i = 0; i < count; i++)
+                values.Add(GetRandomElement());
+            Tree.Add(values);
         }
 
-        public bool DeleteElement(int value)
+        private int GetRandomElement()
         {
-            return Tree.Remove(value);
+            int result = 0;
+            do
+            {
+                result = _Random.Next(1, 10000);
+            } while (cachedElements.Contains(result));
+
+            return result;
+        }
+
+        public void DeleteElement(int value)
+        {
+            Tree.Remove(value);
         }
 
         public string PrintElements(TreePrintVariants variant)
         {
             return Tree.Print(variant);
-        }
-
-        private int GetRandomElement()
-        {
-            int result;
-            do
-            {
-                result = _Random.Next(1000, 9999);
-            } while (Tree.Contains(result));
-            return result;
         }
 
     }
@@ -1068,7 +1074,7 @@ namespace Laba1
 
             long countOfReplacements = 0, indexOfMin = 0;
             int temp;
-
+            // берём не отсортированный 0 элемент и меняем местами с минимальным неотсротированным элементом справа
             for (int i = 0; i < sortedItems.Length-1; i++)
             {
                 indexOfMin = i;
@@ -1096,6 +1102,7 @@ namespace Laba1
 
             long countOfReplacements = 0;
 
+            // вставляем каждый следующий не отсортированный элемент в отсортированную последовательность
             for (int i = 0; i < mainItems.Length; i++)
             {
                 int j = i;
@@ -1133,6 +1140,7 @@ namespace Laba1
                         {
                             sortedItems[j] = sortedItems[j - step];
                             countOfReplacements++;
+
                         }
                         else
                             break;
@@ -1143,7 +1151,7 @@ namespace Laba1
             }
 
             timer.Stop();
-            return $"Сортировка вставкой; прошло времени: {timer.Elapsed.TotalSeconds} сек; кол-во перестановок: {countOfReplacements}";
+            return $"Сортировка шелла; прошло времени: {timer.Elapsed.TotalSeconds} сек; кол-во перестановок: {countOfReplacements}";
         }
 
         public string PrintMainElements()
@@ -1411,6 +1419,31 @@ namespace Laba1
             curElement.NextItem = new CustomLinkedListElement<T>(value, curElement.NextItem, curElement);
         }
 
+        public T[] ToArray()
+        {
+            int countOfElements = 0;
+            if (RootElement == null)
+            {
+                return null;
+            }
+            var curElement = RootElement;
+            countOfElements++;
+            while (curElement.NextItem != null)
+            {
+                curElement = curElement.NextItem;
+                countOfElements++;
+            }
+
+            var result = new T[countOfElements];
+            curElement = RootElement;
+            for (int i = 0; i < countOfElements; i++)
+            {
+                result[i] = curElement.Value;
+                curElement = curElement.NextItem;
+            }
+            return result;
+        }
+
     }
 
     public interface IElement<T>
@@ -1487,125 +1520,132 @@ namespace Laba1
 
     }
 
-    public class BinaryTree<T> where T : IComparable<T>
+    public class BinaryTree<T>
     {
 
         private TreeElement<T> RootElement;
 
-        public BinaryTree(T value)
+        public BinaryTree()
         {
-            RootElement = new TreeElement<T>(value);
+            RootElement = null;
         }
 
-        public void Add(T element)
+        public void Add(CustomLinkedList<T> elements)
         {
-            if (Contains(element))
+            if (RootElement == null)
+            {
+                RootElement = new TreeElement<T>(elements.ElementAt(0));
+                elements.RemoveAt(0);
+            }
+            Add(elements.ToArray(), RootElement);
+        }
+
+        private void Add(T[] elements, TreeElement<T> parent)
+        {
+            if (elements.Length == 0)
                 return;
 
-            var currentElement = RootElement;
-            while (true)
+            var leftElement = new TreeElement<T>(elements[0], parent);
+
+            if (elements.Length == 1)
             {
-                if (element.CompareTo(currentElement.Value) < 0)
-                {
-                    if (currentElement.Left == null)
-                    {
-                        currentElement.Left = new TreeElement<T>(element, currentElement);
-                        break;
-                    }
-                    else
-                        currentElement = currentElement.Left;
-                }
-                else
-                {
-                    if (currentElement.Right == null)
-                    {
-                        currentElement.Right = new TreeElement<T>(element, currentElement);
-                        break;
-                    }
-                    else
-                        currentElement = currentElement.Right;
-                }
+                parent.Left = leftElement;
+                return;
             }
+
+            int middle = elements.Length / 2;
+            var rightElement = new TreeElement<T>(elements[middle], parent);
+
+            parent.Left = leftElement;
+            Add(CutArray(elements, 1, middle), leftElement);
+
+            parent.Right = rightElement;
+            Add(CutArray(elements, middle+1, elements.Length), rightElement);
         }
 
-        public bool Remove(T element)
+        private T[] CutArray(T[] source, int start, int end)
         {
-            if (!Contains(element) || RootElement == null)
-                return false;
-
-            var side = Sides.Left; // указывает на то, с какой стороны мы находимя относительно родителя
-            var currentElement = RootElement;
-            while (element.CompareTo(currentElement.Value) != 0)
-            {
-                if (element.CompareTo(currentElement.Value) < 0)
-                {
-                    currentElement = currentElement.Left;
-                    side = Sides.Left;
-                }
-                else
-                {
-                    currentElement = currentElement.Right;
-                    side = Sides.Right;
-                }
-            }
-
-            if (currentElement.IsHaveChilds)
-            {
-                if (currentElement.Left != null)
-                {
-                    var rightElement = currentElement.Left;
-
-                    if (rightElement.Right != null)
-                    {
-                        while (rightElement.Right != null)
-                            rightElement = rightElement.Right;
-
-                        currentElement.Value = rightElement.Value;
-                        rightElement.Parent.Right = rightElement.Left;
-                    }
-                    else
-                    {
-                        currentElement.Value = currentElement.Left.Value;
-                        currentElement.Left = currentElement.Left.Left;
-                    }
-                }
-                else
-                    currentElement.Parent.Left = currentElement.Right;
-            }
-            else
-            {
-                // проверка на корневой элемент
-                if (currentElement.Parent != null)
-                {
-                    if (side == Sides.Right)
-                        currentElement.Parent.Right = null;
-                    else
-                        currentElement.Parent.Left = null;
-                }
-                else
-                    RootElement = null;
-            }
-
-            return true;
+            var result = new T[end - start];
+            for (int i = start, j = 0; i < end; i++, j++)
+                result[j] = source[i];
+            return result;
         }
 
-        public bool Contains(T element)
+        public void Remove(T element)
         {
-            var currentElement = RootElement;
-            int compareResult = -1;
-            while (compareResult != 0)
+            if (RootElement == null)
+                return;
+
+            Remove(RootElement, element);
+        }
+
+        private void Remove(TreeElement<T> curElement, T searchValue)
+        {
+            if (curElement.Value.Equals(searchValue))
             {
-                compareResult = element.CompareTo(currentElement.Value);
+                var parent = curElement.Parent;
 
-                if (compareResult < 0)
-                    currentElement = currentElement.Left;
-                else if (compareResult > 0)
-                    currentElement = currentElement.Right;
-
-                if (currentElement == null) 
-                    return false;
+                if (curElement.Left != null)
+                {
+                    var e = curElement.Left;
+                    var side = Sides.Left;
+                    while (!curElement.IsHaveChilds)
+                    {
+                        if (curElement.Left != null)
+                        {
+                            e = curElement.Left;
+                            side = Sides.Left;
+                        }
+                        else if (curElement.Right != null)
+                        {
+                            e = curElement.Right;
+                            side = Sides.Right;
+                        }
+                    }
+                    curElement.Value = e.Value;
+                    if (side == Sides.Left)
+                        e.Parent.Left = null;
+                    else if (side == Sides.Right)
+                        e.Parent.Right = null;
+                }
+                else if (curElement.Right != null)
+                {
+                    var e = curElement.Right;
+                    var side = Sides.Left;
+                    while (!curElement.IsHaveChilds)
+                    {
+                        if (curElement.Left != null)
+                        {
+                            e = curElement.Left;
+                            side = Sides.Left;
+                        }
+                        else if (curElement.Right != null)
+                        {
+                            e = curElement.Right;
+                            side = Sides.Right;
+                        }
+                    }
+                    curElement.Value = e.Value;
+                    if (side == Sides.Left)
+                        curElement.Parent.Left = null;
+                    else if (side == Sides.Right)
+                        curElement.Parent.Right = null;
+                }
+                else
+                {
+                    if (parent.Left == curElement)
+                        parent.Left = null;
+                    else if (parent.Right == curElement)
+                        parent.Right = null;
+                }
+                return;
             }
-            return true;
+
+            if (curElement.Left != null)
+                Remove(curElement.Left, searchValue);
+
+            if (curElement.Right != null)
+                Remove(curElement.Right, searchValue);
         }
 
         public string Print(TreePrintVariants variant)
@@ -1633,6 +1673,9 @@ namespace Laba1
                 return r;
             }
             StringBuilder result = new StringBuilder();
+
+            if (RootElement == null)
+                return "";
 
             result.Append(Print(RootElement, 0, "S:"));
 
@@ -1683,7 +1726,7 @@ namespace Laba1
 
     }
 
-    public class TreeElement<T> where T : IComparable<T>
+    public class TreeElement<T>
     {
 
         public T Value { get; set; }
@@ -1694,12 +1737,24 @@ namespace Laba1
 
         public TreeElement<T> Right { get; set; }
 
-        public bool IsHaveChilds { get { return Left != null || Right != null; } }
+        public bool IsHaveChilds 
+        { 
+            get 
+            { 
+                return Left != null || Right != null; 
+            } 
+        }
 
         public TreeElement(T value, TreeElement<T> parent = null)
         {
             Value = value;
             Parent = parent;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var e = obj as TreeElement<T>;
+            return Value.Equals(e.Value);
         }
 
         public override string ToString()
